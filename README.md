@@ -1,6 +1,6 @@
-# Luma & Leaf
+# Moroa Lane
 
-Luma & Leaf is a Rails + SQLite commerce demo for a realistic skincare shop.
+Moroa Lane is a Rails + SQLite commerce demo for a realistic skincare shop.
 
 The goal is to look like a realistic DTC skincare shop while staying intentionally small. The app is not a full commerce platform. It shows how ChannelTalk can identify a visitor, attach member data after login, and give a support team useful shopping context.
 
@@ -41,7 +41,7 @@ Open `http://localhost:3001`.
 
 The static preview is published from `docs/`:
 
-https://nimowayangjowi.github.io/luma-and-leaf/
+https://nimowayangjowi.github.io/moroa-lane/
 
 To refresh the static preview after changing Rails views, run the Rails server and export again:
 

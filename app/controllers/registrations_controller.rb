@@ -10,7 +10,7 @@ class RegistrationsController < ApplicationController
 
     if @user.save
       start_new_session_for(@user)
-      redirect_to account_path, notice: "Welcome to Luma & Leaf."
+      redirect_to account_path, notice: "Welcome to Moroa Lane."
     else
       render :new, status: :unprocessable_entity
     end

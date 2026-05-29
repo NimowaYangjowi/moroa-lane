@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Luma & Leaf" %></title>
+    <title><%= content_for(:title) || "Moroa Lane" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Luma & Leaf">
+    <meta name="application-name" content="Moroa Lane">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -25,7 +25,7 @@
 
   <body>
     <header class="site-header">
-      <%= link_to "Luma & Leaf", root_path, class: "brand-link" %>
+      <%= link_to "Moroa Lane", root_path, class: "brand-link" %>
       <nav class="site-nav" aria-label="Primary">
         <%= link_to "Shop", products_path %>
         <%= link_to "About", root_path(anchor: "scope") %>
