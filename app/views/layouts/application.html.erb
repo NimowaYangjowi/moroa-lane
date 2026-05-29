@@ -51,11 +51,12 @@
       <%= yield %>
     </main>
 
-    <% if channel_sdk_enabled? %>
+    <% channel_logged_out = flash[:channel_logged_out].present? %>
+    <% channel_suppressed_after_logout = cookies[:channel_member_logged_out].present? && current_user.blank? %>
+    <% if channel_sdk_enabled? && !channel_logged_out && !channel_suppressed_after_logout %>
       <script>
         (function(){var w=window;if(w.ChannelIO){return w.console.error("ChannelIO script included twice.");}var ch=function(){ch.c(arguments);};ch.q=[];ch.c=function(args){ch.q.push(args);};w.ChannelIO=ch;function l(){if(w.ChannelIOInitialized){return;}w.ChannelIOInitialized=true;var s=document.createElement("script");s.type="text/javascript";s.async=true;s.src="https://cdn.channel.io/plugin/ch-plugin-web.js";var x=document.getElementsByTagName("script")[0];if(x.parentNode){x.parentNode.insertBefore(s,x);}}if(document.readyState==="complete"){l();}else{w.addEventListener("DOMContentLoaded",l);w.addEventListener("load",l);}})();
         var channelBootOptions = <%= raw json_escape(channel_boot_options.to_json) %>;
-        var shouldResetChannelSession = <%= flash[:channel_logged_out].present?.to_json %>;
 
         function clearChannelTalkBrowserState() {
           try {
@@ -77,13 +78,7 @@
           });
         }
 
-        if (shouldResetChannelSession) {
-          clearChannelTalkBrowserState();
-          ChannelIO("shutdown");
-          window.setTimeout(bootChannelTalk, 200);
-        } else {
-          bootChannelTalk();
-        }
+        bootChannelTalk();
 
         document.addEventListener("submit", function(event) {
           var form = event.target;
@@ -94,6 +89,20 @@
             ChannelIO("shutdown");
           }
         }, true);
+      </script>
+    <% elsif channel_sdk_enabled? && (channel_logged_out || channel_suppressed_after_logout) %>
+      <script>
+        try {
+          Object.keys(window.localStorage || {}).forEach(function(key) {
+            if (key.indexOf("Channel.") === 0) { window.localStorage.removeItem(key); }
+          });
+          Object.keys(window.sessionStorage || {}).forEach(function(key) {
+            if (key.indexOf("Channel.") === 0) { window.sessionStorage.removeItem(key); }
+          });
+          document.cookie = "_channeltalk_session=; Max-Age=0; path=/; SameSite=Lax";
+        } catch (error) {
+          console.warn("ChannelTalk browser state cleanup failed", error);
+        }
       </script>
     <% else %>
       <%= link_to "Chat with us", channel_debug_path, class: "channel-fallback-button" %>
