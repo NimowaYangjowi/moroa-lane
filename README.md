@@ -2,18 +2,28 @@
 
 Luma & Leaf is a Rails + SQLite commerce simulator for a ChannelTalk technical interview.
 
-The app is intentionally scoped as a realistic example shop, not a full commerce platform. It will look and feel like a small skincare store while focusing on the ChannelTalk integration story: anonymous visitors, signed-in members, customer attributes, cart context, and seeded order history.
+The goal is to look like a realistic DTC skincare shop while staying intentionally small. The app is not a full commerce platform. It exists to explain how ChannelTalk can identify a visitor, attach member data after login, and give a support team useful shopping context.
 
-## Current Scope
+## What This Demonstrates
 
+- Anonymous visitor browsing products before login
+- Native Rails signup and login
+- Stable `memberId` based on the local shop user
+- Customer profile fields: name, email, signup date, customer tier, skin type
+- Product browsing context
+- Cart context: item count and cart total
+- Seeded order history
+- ChannelTalk Web SDK boot options
+- `/debug/channel` payload inspection page
+
+## Tech Stack
+
+- Ruby 3.3.6
 - Rails 8.1
 - SQLite
-- Native Rails authentication
-- Product browsing
-- Customer profile context
-- Cart and seeded order history
-- ChannelTalk Web SDK boot data
-- Debug panel for the payload sent to ChannelTalk
+- Rails native authentication
+- ERB views
+- ChannelTalk Web SDK
 
 ## Setup
 
@@ -25,9 +35,67 @@ bin/rails server
 
 Open `http://localhost:3000`.
 
-## Interview Goal
+If port 3000 is already in use:
 
-Use this app to explain how a customer moves from an anonymous visitor to a known member, and how ChannelTalk can receive useful support context such as name, email, signup date, recently viewed product, cart value, and previous orders.
+```sh
+bin/rails server -p 3001
+```
+
+If the database already exists, run:
+
+```sh
+bin/rails db:migrate db:seed
+```
+
+## Demo Account
+
+```text
+Email: jiwoo@example.com
+Password: password123
+```
+
+## ChannelTalk Settings
+
+The app works without a real ChannelTalk plugin key. In that case, it shows a local floating "ChannelTalk demo" button that opens `/debug/channel`.
+
+To boot the real SDK, set:
+
+```sh
+export CHANNELTALK_PLUGIN_KEY="your_plugin_key"
+bin/rails server
+```
+
+For a production-like member hash demo, also set:
+
+```sh
+export CHANNELTALK_MEMBER_HASH_SECRET="your_member_hash_secret"
+```
+
+`CHANNELTALK_PLUGIN_KEY` connects the Web SDK to a ChannelTalk channel. `CHANNELTALK_MEMBER_HASH_SECRET` is optional in this local simulator, but the official docs recommend member hash when `memberId` values are predictable.
+
+## Demo Flow
+
+1. Open the home page and show that this looks like a real skincare shop.
+2. Open `Shop` and click a product.
+3. Point out that a product page is where a customer naturally asks support questions.
+4. Open `Channel Debug` before login. The payload has no `memberId`, so this is an anonymous visitor.
+5. Log in with the demo account.
+6. Open a few product pages to create recent browsing context.
+7. Add a product to the cart.
+8. Open `My page` and show member fields, recent views, cart summary, and seeded order history.
+9. Open `Channel Debug` again. The payload now includes `memberId`, profile fields, cart context, and order context.
+
+## Interview Talking Points
+
+`memberId` is the stable ID ChannelTalk uses to recognize the same member user. In this app, it is built as `user_#{id}` from the local Rails user. Email is useful profile data, but it can change, so it should not be the primary identity key.
+
+Anonymous, Lead, and Member can be explained from the UI:
+
+- Anonymous: a visitor browsing the shop before the app knows who they are.
+- Lead: a visitor who leaves contact information during a conversation. This simulator does not deeply implement Lead conversion, but the concept fits the pre-login support flow.
+- Member: a logged-in shop user with a stable `memberId` and profile fields.
+
+The `/debug/channel` page is the developer troubleshooting view. It answers the first integration questions: Which plugin key is being used? Is `memberId` present? Which profile fields are being sent? Is member hash enabled?
 
 ## Not In Scope
 
@@ -37,3 +105,14 @@ Use this app to explain how a customer moves from an anonymous visitor to a know
 - Inventory management
 - Coupons, points, or reviews
 - Full Channel Open API implementation
+- Production deployment
+
+## Tests
+
+```sh
+bin/rails test
+```
+
+## Planning Docs
+
+The phase plan and review log live in `tasks/channel-talk-commerce-simulator`.

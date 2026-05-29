@@ -5,7 +5,7 @@
 ## Phase 0: Planning Documents
 
 완료일: 2026-05-29
-커밋: 아직 없음
+커밋: f789905, e7c4207
 
 ### 완료한 것
 
@@ -37,7 +37,7 @@
 ## Phase 5: Channel SDK
 
 완료일: 2026-05-29
-커밋: 예정
+커밋: 08747fc
 
 ### 완료한 것
 
@@ -70,7 +70,7 @@
 ## Phase 4: Cart And Orders
 
 완료일: 2026-05-29
-커밋: 예정
+커밋: 35a8d3a
 
 ### 완료한 것
 
@@ -103,7 +103,7 @@
 ## Phase 2: Commerce Core
 
 완료일: 2026-05-29
-커밋: 예정
+커밋: 0fa229b
 
 ### 완료한 것
 
@@ -136,7 +136,7 @@
 ## Phase 3: Auth And Customer Profile
 
 완료일: 2026-05-29
-커밋: 예정
+커밋: e59a758
 
 ### 완료한 것
 
@@ -170,7 +170,7 @@
 ## Phase 1: Setup
 
 완료일: 2026-05-29
-커밋: 예정
+커밋: 6986599
 
 ### 완료한 것
 
@@ -197,3 +197,35 @@
 ### 다음 phase 계획 변경
 
 - 변경 없음
+
+## Phase 6: Demo Polish
+
+완료일: 2026-05-29
+커밋: Phase 6 최종 커밋
+
+### 완료한 것
+
+- 프로젝트 루트 `README.md`를 면접용 실행 문서로 완성했다.
+- `.env.example`을 추가해 ChannelTalk plugin key와 member hash secret 설정값을 보여줬다.
+- 포트 3000이 사용 중일 때 `-p 3001`로 실행하는 방법을 README에 추가했다.
+- 홈, 상품 목록, 상품 상세, 로그인, 채널톡 디버그 페이지가 로컬 서버에서 200으로 열리는지 확인했다.
+
+### 검증한 것
+
+- `bin/rails test` 통과.
+- `bin/rails server -p 3001` 실행 성공.
+- `curl`로 `/`, `/products`, `/products/cloud-barrier-cream`, `/session/new`, `/debug/channel` 200 응답과 핵심 문구 렌더링을 확인했다.
+
+### 회귀 위험
+
+- Playwright가 로컬 Node 런타임에 없어 스크린샷 자동 검증은 하지 못했다.
+- 실제 ChannelTalk plugin key를 넣은 실계정 boot 검증은 아직 하지 않았다.
+
+### 개선사항
+
+- 실제 면접 전 채널톡 무료 계정의 plugin key로 한 번 boot를 확인하면 좋다.
+- 가능하면 Chrome 또는 Playwright 환경에서 모바일 폭 화면을 한 번 더 확인한다.
+
+### 다음 phase 계획 변경
+
+- 모든 계획 phase 완료.
