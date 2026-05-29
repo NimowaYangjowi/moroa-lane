@@ -1,0 +1,84 @@
+#!/usr/bin/env ruby
+
+require "fileutils"
+require "net/http"
+require "uri"
+
+BASE_URL = ENV.fetch("STATIC_EXPORT_BASE_URL", "http://127.0.0.1:3001")
+PAGES_BASE_PATH = ENV.fetch("PAGES_BASE_PATH", "/channeltalk")
+OUTPUT_DIR = File.expand_path("../docs", __dir__)
+
+PAGES = {
+  "/" => "index.html",
+  "/products" => "products/index.html",
+  "/products/cloud-barrier-cream" => "products/cloud-barrier-cream/index.html",
+  "/products/glass-dew-serum" => "products/glass-dew-serum/index.html",
+  "/products/mineral-calm-spf-40" => "products/mineral-calm-spf-40/index.html",
+  "/products/rice-milk-cleanser" => "products/rice-milk-cleanser/index.html",
+  "/products/night-reset-ampoule" => "products/night-reset-ampoule/index.html",
+  "/products/soft-cotton-toner-pads" => "products/soft-cotton-toner-pads/index.html",
+  "/session/new" => "session/new/index.html",
+  "/registration/new" => "registration/new/index.html",
+  "/debug/channel" => "care/index.html"
+}.freeze
+
+ASSET_FILES = {
+  "app/assets/stylesheets/application.css" => "assets/application.css",
+  "public/icon.png" => "icon.png",
+  "public/icon.svg" => "icon.svg"
+}.freeze
+
+def fetch(path)
+  uri = URI.join(BASE_URL, path)
+  response = Net::HTTP.get_response(uri)
+  raise "Failed to fetch #{uri}: #{response.code}" unless response.is_a?(Net::HTTPSuccess)
+
+  response.body
+end
+
+def rewrite_html(html)
+  html
+    .sub("<head>", %(<head>\n    <meta charset="utf-8">))
+    .gsub(/<!-- BEGIN .*?-->/m, "")
+    .gsub(/<!-- END .*?-->/m, "")
+    .gsub(%r{<script type="importmap".*?</script>}m, "")
+    .gsub(%r{<link rel="modulepreload".*?>\n?}, "")
+    .gsub(%r{<script type="module">.*?</script>}m, "")
+    .gsub(%r{<meta name="csrf-param".*?>\n?}, "")
+    .gsub(%r{<meta name="csrf-token".*?>\n?}, "")
+    .gsub(%r{<input type="hidden" name="authenticity_token".*?>\n?}, "")
+    .gsub(%r{href="/assets/[^"]+\.css"}, %(href="#{PAGES_BASE_PATH}/assets/application.css"))
+    .gsub(%r{href="/icon\.png"}, %(href="#{PAGES_BASE_PATH}/icon.png"))
+    .gsub(%r{href="/icon\.svg"}, %(href="#{PAGES_BASE_PATH}/icon.svg"))
+    .gsub(%r{href="/products/([^"#]+)"}, %(href="#{PAGES_BASE_PATH}/products/\\1/"))
+    .gsub(%r{href="/products"}, %(href="#{PAGES_BASE_PATH}/products/"))
+    .gsub(%r{href="/session/new"}, %(href="#{PAGES_BASE_PATH}/session/new/"))
+    .gsub(%r{href="/registration/new"}, %(href="#{PAGES_BASE_PATH}/registration/new/"))
+    .gsub(%r{href="/passwords/new"}, %(href="#"))
+    .gsub(%r{href="/debug/channel"}, %(href="#{PAGES_BASE_PATH}/care/"))
+    .gsub(%r{href="/#scope"}, %(href="#{PAGES_BASE_PATH}/#scope"))
+    .gsub(%r{href="/"}, %(href="#{PAGES_BASE_PATH}/"))
+    .gsub(%r{action="/session"}, %(action="#"))
+    .gsub(%r{action="/registration"}, %(action="#"))
+    .gsub(%r{action="/cart_items"}, %(action="#"))
+end
+
+FileUtils.rm_rf(OUTPUT_DIR)
+FileUtils.mkdir_p(OUTPUT_DIR)
+
+ASSET_FILES.each do |source, target|
+  source_path = File.expand_path("../#{source}", __dir__)
+  target_path = File.join(OUTPUT_DIR, target)
+  FileUtils.mkdir_p(File.dirname(target_path))
+  FileUtils.cp(source_path, target_path)
+end
+
+PAGES.each do |path, output|
+  html = rewrite_html(fetch(path))
+  target = File.join(OUTPUT_DIR, output)
+  FileUtils.mkdir_p(File.dirname(target))
+  File.write(target, html)
+end
+
+File.write(File.join(OUTPUT_DIR, ".nojekyll"), "")
+puts "Exported #{PAGES.size} pages to #{OUTPUT_DIR}"

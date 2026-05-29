@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Luma &amp; Leaf</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Luma & Leaf">
+    <meta name="mobile-web-app-capable" content="yes">
+        
+
+    
+
+
+    <link rel="icon" href="/channeltalk/icon.png" type="image/png">
+    <link rel="icon" href="/channeltalk/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/channeltalk/icon.png">
+
+    <link rel="stylesheet" href="/channeltalk/assets/application.css" data-turbo-track="reload" />
+    
+
+  </head>
+
+  <body>
+    <header class="site-header">
+      <a class="brand-link" href="/channeltalk/">Luma &amp; Leaf</a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="/channeltalk/products/">Shop</a>
+        <a href="/channeltalk/#scope">About</a>
+          <a href="/channeltalk/session/new/">Log in</a>
+          <a href="/channeltalk/registration/new/">Join</a>
+      </nav>
+    </header>
+
+    <main>
+
+      <section class="auth-shell">
+  <div class="auth-panel">
+    <p class="eyebrow">Create member</p>
+    <h1>Join Luma & Leaf.</h1>
+    <p>
+      Create an account to keep your routine preferences, cart, and order history in one place.
+    </p>
+
+
+    <form class="form-stack" data-turbo="false" action="#" accept-charset="UTF-8" method="post">      <label>
+        Name
+        <input required="required" autocomplete="name" placeholder="Jiwoo Kim" type="text" name="user[name]" id="user_name" />
+      </label>
+
+      <label>
+        Email
+        <input required="required" autocomplete="username" placeholder="jiwoo@example.com" type="email" name="user[email_address]" id="user_email_address" />
+      </label>
+
+      <label>
+        Skin type
+        <select required="required" name="user[skin_type]" id="user_skin_type"><option value="" label=" "></option>
+<option value="Dry skin">Dry skin</option>
+<option value="Sensitive skin">Sensitive skin</option>
+<option value="Combination skin">Combination skin</option>
+<option value="Oily skin">Oily skin</option>
+<option value="Normal skin">Normal skin</option></select>
+      </label>
+
+      <label>
+        Password
+        <input required="required" autocomplete="new-password" placeholder="At least 8 characters" maxlength="72" size="72" type="password" name="user[password]" id="user_password" />
+      </label>
+
+      <label>
+        Confirm password
+        <input required="required" autocomplete="new-password" placeholder="Repeat password" maxlength="72" size="72" type="password" name="user[password_confirmation]" id="user_password_confirmation" />
+      </label>
+
+      <input type="submit" name="commit" value="Create account" class="button" data-disable-with="Create account" />
+</form>  </div>
+</section>
+
+    </main>
+
+      <a class="channel-fallback-button" href="/channeltalk/care/">Chat with us</a>
+  </body>
+</html>
