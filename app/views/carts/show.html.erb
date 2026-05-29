@@ -1,9 +1,8 @@
 <section class="page-hero compact-hero">
-  <p class="eyebrow">Cart context</p>
-  <h1>Your current purchase intent.</h1>
+  <p class="eyebrow">Shopping bag</p>
+  <h1>Your cart.</h1>
   <p>
-    The cart shows what a customer is considering now. In a support conversation, this helps
-    the team answer delivery, product fit, and bundle questions faster.
+    Review your selected products and adjust quantities before you continue shopping.
   </p>
 </section>
 
@@ -40,18 +39,18 @@
             <dd><%= current_user.cart_items_count %></dd>
           </div>
           <div>
-            <dt>Payment</dt>
-            <dd>Not implemented</dd>
+            <dt>Estimated total</dt>
+            <dd><%= money(@cart_total_cents) %></dd>
           </div>
         </dl>
-        <p class="muted-copy">Checkout is intentionally excluded from this interview simulator.</p>
+        <%= link_to "Continue shopping", products_path, class: "button secondary-button panel-action" %>
       </aside>
     </div>
   <% else %>
     <div class="empty-state">
       <p class="eyebrow">Empty cart</p>
-      <h2>Add a product to create support context.</h2>
-      <p>Cart items help explain what ChannelTalk can show when a customer asks for buying help.</p>
+      <h2>Add a product to start your cart.</h2>
+      <p>Your cart keeps the products you are considering in one place.</p>
       <%= link_to "Browse products", products_path, class: "button" %>
     </div>
   <% end %>

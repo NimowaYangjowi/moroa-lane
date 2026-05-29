@@ -28,8 +28,7 @@
       <%= link_to "Luma & Leaf", root_path, class: "brand-link" %>
       <nav class="site-nav" aria-label="Primary">
         <%= link_to "Shop", products_path %>
-        <%= link_to "Demo Scope", root_path(anchor: "scope") %>
-        <%= link_to "Channel Debug", channel_debug_path %>
+        <%= link_to "About", root_path(anchor: "scope") %>
         <% if current_user %>
           <%= link_to "My page", account_path %>
           <%= link_to "Cart (#{current_user.cart_items_count})", cart_path %>
@@ -60,7 +59,7 @@
         });
       </script>
     <% else %>
-      <%= link_to "ChannelTalk demo", channel_debug_path, class: "channel-fallback-button" %>
+      <%= link_to "Chat with us", channel_debug_path, class: "channel-fallback-button" %>
     <% end %>
   </body>
 </html>
