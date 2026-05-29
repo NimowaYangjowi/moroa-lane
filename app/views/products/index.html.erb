@@ -1,0 +1,32 @@
+<section class="page-hero compact-hero">
+  <p class="eyebrow">Shop skincare</p>
+  <h1>Daily care products with support context built in.</h1>
+  <p>
+    Browse the same product surfaces a real customer would use before starting a ChannelTalk
+    conversation about fit, delivery, or a previous order.
+  </p>
+</section>
+
+<section class="section">
+  <div class="collection-toolbar">
+    <div>
+      <p class="eyebrow">Collection</p>
+      <h2><%= pluralize(@products.size, "product") %></h2>
+    </div>
+    <p class="toolbar-note">Seeded demo catalog for interview walkthroughs.</p>
+  </div>
+
+  <div class="product-grid">
+    <% @products.each do |product| %>
+      <%= link_to product_path(product), class: "product-card" do %>
+        <%= image_tag product.image_url, alt: product.name, class: "product-card-image" %>
+        <div class="product-card-body">
+          <p class="product-meta"><%= product.category %> · <%= product.skin_type %></p>
+          <h3><%= product.name %></h3>
+          <p><%= truncate(product.description, length: 110) %></p>
+          <strong><%= money(product.price_cents) %></strong>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</section>

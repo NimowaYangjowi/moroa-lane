@@ -1,0 +1,44 @@
+<section class="product-detail">
+  <div class="product-media">
+    <%= image_tag @product.image_url, alt: @product.name %>
+  </div>
+
+  <div class="product-info">
+    <p class="eyebrow"><%= @product.category %> · <%= @product.skin_type %></p>
+    <h1><%= @product.name %></h1>
+    <p class="price"><%= money(@product.price_cents) %></p>
+    <p class="product-description"><%= @product.description %></p>
+
+    <div class="product-actions">
+      <button class="button" type="button">Add to cart soon</button>
+      <span>Cart actions arrive in Phase 4.</span>
+    </div>
+
+    <div class="support-context">
+      <h2>Support context for ChannelTalk</h2>
+      <p>
+        When a customer opens chat here, the product page gives the support team a clear starting point:
+        product name, category, skin type, and the fact that this was recently viewed.
+      </p>
+    </div>
+  </div>
+</section>
+
+<% if @recent_products.any? %>
+  <section class="section">
+    <p class="eyebrow">Recently viewed</p>
+    <h2>Other products from this session</h2>
+    <div class="product-grid small-grid">
+      <% @recent_products.each do |product| %>
+        <%= link_to product_path(product), class: "product-card" do %>
+          <%= image_tag product.image_url, alt: product.name, class: "product-card-image" %>
+          <div class="product-card-body">
+            <p class="product-meta"><%= product.category %></p>
+            <h3><%= product.name %></h3>
+            <strong><%= money(product.price_cents) %></strong>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </section>
+<% end %>

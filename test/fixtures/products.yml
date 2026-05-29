@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: Cloud Barrier Cream
+  slug: cloud-barrier-cream
+  category: Moisturizer
+  description: MyText
+  price_cents: 4200
+  image_url: https://example.com/cream.jpg
+  skin_type: Dry skin
+  featured: true
+
+two:
+  name: Glass Dew Serum
+  slug: glass-dew-serum
+  category: Serum
+  description: MyText
+  price_cents: 3800
+  image_url: https://example.com/serum.jpg
+  skin_type: All skin
+  featured: false

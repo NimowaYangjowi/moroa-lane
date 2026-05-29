@@ -9,6 +9,30 @@
   </div>
 </section>
 
+<section class="section product-preview">
+  <div class="section-header">
+    <div>
+      <p class="eyebrow">Bestsellers</p>
+      <h2>Customer questions start with the product in front of them.</h2>
+    </div>
+    <%= link_to "View all products", products_path, class: "button secondary-button" %>
+  </div>
+
+  <div class="product-grid">
+    <% @featured_products.each do |product| %>
+      <%= link_to product_path(product), class: "product-card" do %>
+        <%= image_tag product.image_url, alt: product.name, class: "product-card-image" %>
+        <div class="product-card-body">
+          <p class="product-meta"><%= product.category %> · <%= product.skin_type %></p>
+          <h3><%= product.name %></h3>
+          <p><%= truncate(product.description, length: 96) %></p>
+          <strong><%= money(product.price_cents) %></strong>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
 <section class="section" id="scope">
   <p class="eyebrow">Project scope</p>
   <h2>Built to look like a real shop, scoped for integration talk.</h2>
