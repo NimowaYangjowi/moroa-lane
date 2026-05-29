@@ -77,17 +77,29 @@ Password: password123
 
 The app works without a real ChannelTalk plugin key. In that case, it shows a local floating "ChannelTalk demo" button that opens `/debug/channel`.
 
-To boot the real SDK, set:
+To boot the real SDK locally, copy the example environment file and fill in your values:
 
 ```sh
-export CHANNELTALK_PLUGIN_KEY="your_plugin_key"
+cp .env.example .env
+```
+
+```env
+CHANNELTALK_PLUGIN_KEY=your_plugin_key
+CHANNELTALK_MEMBER_HASH_SECRET=your_member_hash_secret
+```
+
+Then restart the development server:
+
+```sh
 bin/dev
 ```
 
-For a production-like member hash demo, also set:
+You can still set the values directly in the shell if you prefer:
 
 ```sh
+export CHANNELTALK_PLUGIN_KEY="your_plugin_key"
 export CHANNELTALK_MEMBER_HASH_SECRET="your_member_hash_secret"
+bin/dev
 ```
 
 `CHANNELTALK_PLUGIN_KEY` connects the Web SDK to a ChannelTalk channel. `CHANNELTALK_MEMBER_HASH_SECRET` is optional in this local simulator, but the official docs recommend member hash when `memberId` values are predictable.
