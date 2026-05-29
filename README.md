@@ -13,6 +13,7 @@ The goal is to look like a realistic DTC skincare shop while staying intentional
 - Product browsing context
 - Cart context: item count and cart total
 - Seeded order history
+- ChannelTalk tags for non-sensitive customer segmentation
 - ChannelTalk Web SDK boot options
 - `/debug/channel` payload inspection page
 
@@ -118,7 +119,9 @@ bin/dev
 
 ## Interview Talking Points
 
-`memberId` is the stable ID ChannelTalk uses to recognize the same member user. In this app, it is built as `user_#{id}` from the local Rails user. Email is useful profile data, but it can change, so it should not be the primary identity key.
+`memberId` is the stable ID ChannelTalk uses to recognize the same member user. In this app, it is built from the local user's UUID as `shop_user_#{uuid}`. Email is useful profile data, but it can change, so it should not be the primary identity key.
+
+The customer-facing account page only shows details a shopper expects to see, such as name, email, signup date, customer tier, skin type, cart summary, recent products, and order history. Internal identifiers stay out of the customer UI and are used only for integration.
 
 Anonymous, Lead, and Member can be explained from the UI:
 

@@ -18,7 +18,8 @@ class ChannelPayload
       pluginKey: plugin_key,
       memberId: user.member_id,
       language: "en",
-      profile: member_profile
+      profile: member_profile,
+      tags: member_tags
     }
 
     payload[:memberHash] = member_hash if member_hash_secret.present?
@@ -40,14 +41,26 @@ class ChannelPayload
     {
       name: user.name,
       email: user.email_address,
+      externalUserId: user.uuid,
       signupDate: user.created_at.iso8601,
       customerTier: user.customer_tier,
       skinType: user.skin_type,
       cartItemsCount: user.cart_items_count,
       cartTotal: format_money(user.cart_total_cents),
       lastViewedProduct: last_viewed_product&.name,
-      lastOrderAt: last_order&.placed_at&.iso8601
+      lastViewedCategory: last_viewed_product&.category,
+      lastOrderAt: last_order&.placed_at&.iso8601,
+      lastOrderStatus: last_order&.status
     }.compact
+  end
+
+  def member_tags
+    [
+      "tier-#{tag_value(user.customer_tier)}",
+      "skin-#{tag_value(user.skin_type)}",
+      ("cart-active" if user.cart_items_count.positive?),
+      ("has-orders" if last_order.present?)
+    ].compact
   end
 
   def last_viewed_product
@@ -64,5 +77,9 @@ class ChannelPayload
 
   def format_money(cents)
     format("$%.2f", cents.to_i / 100.0)
+  end
+
+  def tag_value(value)
+    value.to_s.parameterize
   end
 end

@@ -6,7 +6,20 @@ class UserTest < ActiveSupport::TestCase
     assert_equal("downcased@example.com", user.email_address)
   end
 
-  test "member_id uses stable database id" do
-    assert_equal "user_#{users(:one).id}", users(:one).member_id
+  test "member_id uses stable uuid" do
+    assert_equal "shop_user_#{users(:one).uuid}", users(:one).member_id
+  end
+
+  test "assigns uuid on create" do
+    user = User.create!(
+      name: "New Customer",
+      email_address: "new@example.com",
+      password: "password123",
+      password_confirmation: "password123",
+      customer_tier: "New",
+      skin_type: "Dry skin"
+    )
+
+    assert user.uuid.present?
   end
 end

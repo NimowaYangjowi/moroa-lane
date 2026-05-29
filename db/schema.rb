@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_29_141722) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_29_163236) do
   create_table "cart_items", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "product_id", null: false
@@ -85,7 +85,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_29_141722) do
     t.string "password_digest", null: false
     t.string "skin_type", default: "Not selected", null: false
     t.datetime "updated_at", null: false
+    t.string "uuid", null: false
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
+    t.index ["uuid"], name: "index_users_on_uuid", unique: true
   end
 
   add_foreign_key "cart_items", "products"
