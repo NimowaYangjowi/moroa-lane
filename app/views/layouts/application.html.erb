@@ -31,6 +31,7 @@
         <%= link_to "Demo Scope", root_path(anchor: "scope") %>
         <% if current_user %>
           <%= link_to "My page", account_path %>
+          <%= link_to "Cart (#{current_user.cart_items_count})", cart_path %>
           <%= button_to "Log out", session_path, method: :delete, class: "nav-button" %>
         <% else %>
           <%= link_to "Log in", new_session_path %>

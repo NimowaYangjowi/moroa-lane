@@ -1,0 +1,58 @@
+<section class="page-hero compact-hero">
+  <p class="eyebrow">Cart context</p>
+  <h1>Your current purchase intent.</h1>
+  <p>
+    The cart shows what a customer is considering now. In a support conversation, this helps
+    the team answer delivery, product fit, and bundle questions faster.
+  </p>
+</section>
+
+<section class="section">
+  <% if @cart_items.any? %>
+    <div class="cart-layout">
+      <div class="cart-list">
+        <% @cart_items.each do |item| %>
+          <article class="cart-row">
+            <%= image_tag item.product.image_url, alt: item.product.name %>
+            <div>
+              <p class="product-meta"><%= item.product.category %></p>
+              <h2><%= link_to item.product.name, product_path(item.product) %></h2>
+              <p><%= money(item.product.price_cents) %> each</p>
+            </div>
+            <div class="cart-controls">
+              <%= form_with model: item, url: cart_item_path(item), method: :patch, class: "quantity-form" do %>
+                <%= number_field_tag :quantity, item.quantity, min: 1, max: 9, class: "quantity-input", aria: { label: "Quantity" } %>
+                <%= submit_tag "Update", class: "button secondary-button" %>
+              <% end %>
+              <%= button_to "Remove", cart_item_path(item), method: :delete, class: "text-button" %>
+            </div>
+            <strong><%= money(item.line_total_cents) %></strong>
+          </article>
+        <% end %>
+      </div>
+
+      <aside class="summary-panel">
+        <p class="eyebrow">Summary</p>
+        <h2><%= money(@cart_total_cents) %></h2>
+        <dl class="definition-list compact-list">
+          <div>
+            <dt>Items</dt>
+            <dd><%= current_user.cart_items_count %></dd>
+          </div>
+          <div>
+            <dt>Payment</dt>
+            <dd>Not implemented</dd>
+          </div>
+        </dl>
+        <p class="muted-copy">Checkout is intentionally excluded from this interview simulator.</p>
+      </aside>
+    </div>
+  <% else %>
+    <div class="empty-state">
+      <p class="eyebrow">Empty cart</p>
+      <h2>Add a product to create support context.</h2>
+      <p>Cart items help explain what ChannelTalk can show when a customer asks for buying help.</p>
+      <%= link_to "Browse products", products_path, class: "button" %>
+    </div>
+  <% end %>
+</section>

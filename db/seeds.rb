@@ -82,3 +82,25 @@ Product.featured.limit(2).each_with_index do |product, index|
     product: product
   ).update!(viewed_at: (index + 1).hours.ago)
 end
+
+CartItem.find_or_initialize_by(
+  user: demo_user,
+  product: Product.find_by!(slug: "glass-dew-serum")
+).update!(quantity: 2)
+
+past_order = Order.find_or_initialize_by(
+  user: demo_user,
+  placed_at: Time.zone.parse("2026-05-12 10:15:00")
+)
+past_order.update!(status: "delivered", total_cents: 7800)
+
+[
+  [ "rice-milk-cleanser", 1, 2600 ],
+  [ "soft-cotton-toner-pads", 1, 2900 ],
+  [ "mineral-calm-spf-40", 1, 2300 ]
+].each do |slug, quantity, price_cents|
+  OrderItem.find_or_initialize_by(
+    order: past_order,
+    product: Product.find_by!(slug: slug)
+  ).update!(quantity: quantity, price_cents: price_cents)
+end

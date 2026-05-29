@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resource :cart, only: :show
+  resources :cart_items, only: %i[create update destroy]
   resource :account, only: :show, controller: :account
   resource :registration, only: %i[new create]
   resource :session

@@ -10,8 +10,17 @@
     <p class="product-description"><%= @product.description %></p>
 
     <div class="product-actions">
-      <button class="button" type="button">Add to cart soon</button>
-      <span>Cart actions arrive in Phase 4.</span>
+      <% if current_user %>
+        <%= form_with url: cart_items_path, class: "inline-form" do |form| %>
+          <%= hidden_field_tag :product_id, @product.id %>
+          <%= number_field_tag :quantity, 1, min: 1, max: 9, class: "quantity-input", aria: { label: "Quantity" } %>
+          <%= form.submit "Add to cart", class: "button" %>
+        <% end %>
+        <span>Cart context becomes part of the support story.</span>
+      <% else %>
+        <%= link_to "Log in to add to cart", new_session_path, class: "button" %>
+        <span>Login turns this visitor into a known member.</span>
+      <% end %>
     </div>
 
     <div class="support-context">

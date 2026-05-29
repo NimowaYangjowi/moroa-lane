@@ -58,4 +58,44 @@
       <p class="muted-copy">Open a product detail page while logged in to attach browsing context to this customer.</p>
     <% end %>
   </div>
+
+  <div class="profile-panel">
+    <p class="eyebrow">Cart</p>
+    <h2>Current intent</h2>
+    <% if @cart_items.any? %>
+      <dl class="definition-list">
+        <div>
+          <dt>Items</dt>
+          <dd><%= current_user.cart_items_count %></dd>
+        </div>
+        <div>
+          <dt>Total</dt>
+          <dd><%= money(current_user.cart_total_cents) %></dd>
+        </div>
+      </dl>
+      <%= link_to "Open cart", cart_path, class: "button secondary-button panel-action" %>
+    <% else %>
+      <p class="muted-copy">No cart items yet.</p>
+    <% end %>
+  </div>
+
+  <div class="profile-panel">
+    <p class="eyebrow">Order history</p>
+    <h2>Seeded past purchases</h2>
+    <% if @orders.any? %>
+      <div class="order-list">
+        <% @orders.each do |order| %>
+          <article class="order-card">
+            <div>
+              <strong><%= order.placed_at.to_date.to_fs(:long) %></strong>
+              <small><%= order.status.titleize %> · <%= pluralize(order.order_items.sum(:quantity), "item") %></small>
+            </div>
+            <span><%= money(order.total_cents) %></span>
+          </article>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="muted-copy">No seeded orders yet.</p>
+    <% end %>
+  </div>
 </section>
