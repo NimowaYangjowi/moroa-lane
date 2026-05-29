@@ -32,7 +32,7 @@
         <% if current_user %>
           <%= link_to "My page", account_path %>
           <%= link_to "Cart (#{current_user.cart_items_count})", cart_path %>
-          <%= button_to "Log out", session_path, method: :delete, class: "nav-button", form: { data: { turbo: false } } %>
+          <%= button_to "Log out", session_path, method: :delete, class: "nav-button", form: { data: { turbo: false, channel_logout_form: true } } %>
         <% else %>
           <%= link_to "Log in", new_session_path %>
           <%= link_to "Join", new_registration_path %>
@@ -57,6 +57,19 @@
         ChannelIO("boot", <%= raw json_escape(channel_boot_options.to_json) %>, function(error) {
           if (error) { console.error("ChannelTalk boot failed", error); }
         });
+
+        document.addEventListener("submit", function(event) {
+          var form = event.target;
+          if (!form.matches("[data-channel-logout-form]") || form.dataset.channelShutdownComplete) { return; }
+
+          form.dataset.channelShutdownComplete = "true";
+
+          if (window.ChannelIO) {
+            event.preventDefault();
+            ChannelIO("shutdown");
+            window.setTimeout(function() { form.submit(); }, 200);
+          }
+        }, true);
       </script>
     <% else %>
       <%= link_to "Chat with us", channel_debug_path, class: "channel-fallback-button" %>
