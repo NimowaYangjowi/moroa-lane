@@ -54,20 +54,44 @@
     <% if channel_sdk_enabled? %>
       <script>
         (function(){var w=window;if(w.ChannelIO){return w.console.error("ChannelIO script included twice.");}var ch=function(){ch.c(arguments);};ch.q=[];ch.c=function(args){ch.q.push(args);};w.ChannelIO=ch;function l(){if(w.ChannelIOInitialized){return;}w.ChannelIOInitialized=true;var s=document.createElement("script");s.type="text/javascript";s.async=true;s.src="https://cdn.channel.io/plugin/ch-plugin-web.js";var x=document.getElementsByTagName("script")[0];if(x.parentNode){x.parentNode.insertBefore(s,x);}}if(document.readyState==="complete"){l();}else{w.addEventListener("DOMContentLoaded",l);w.addEventListener("load",l);}})();
-        ChannelIO("boot", <%= raw json_escape(channel_boot_options.to_json) %>, function(error) {
-          if (error) { console.error("ChannelTalk boot failed", error); }
-        });
+        var channelBootOptions = <%= raw json_escape(channel_boot_options.to_json) %>;
+        var shouldResetChannelSession = <%= flash[:channel_logged_out].present?.to_json %>;
+
+        function clearChannelTalkBrowserState() {
+          try {
+            Object.keys(window.localStorage || {}).forEach(function(key) {
+              if (key.indexOf("Channel.") === 0) { window.localStorage.removeItem(key); }
+            });
+            Object.keys(window.sessionStorage || {}).forEach(function(key) {
+              if (key.indexOf("Channel.") === 0) { window.sessionStorage.removeItem(key); }
+            });
+            document.cookie = "_channeltalk_session=; Max-Age=0; path=/; SameSite=Lax";
+          } catch (error) {
+            console.warn("ChannelTalk browser state cleanup failed", error);
+          }
+        }
+
+        function bootChannelTalk() {
+          ChannelIO("boot", channelBootOptions, function(error) {
+            if (error) { console.error("ChannelTalk boot failed", error); }
+          });
+        }
+
+        if (shouldResetChannelSession) {
+          clearChannelTalkBrowserState();
+          ChannelIO("shutdown");
+          window.setTimeout(bootChannelTalk, 200);
+        } else {
+          bootChannelTalk();
+        }
 
         document.addEventListener("submit", function(event) {
           var form = event.target;
-          if (!form.matches("[data-channel-logout-form]") || form.dataset.channelShutdownComplete) { return; }
-
-          form.dataset.channelShutdownComplete = "true";
+          if (!form.matches("[data-channel-logout-form]")) { return; }
 
           if (window.ChannelIO) {
-            event.preventDefault();
+            clearChannelTalkBrowserState();
             ChannelIO("shutdown");
-            window.setTimeout(function() { form.submit(); }, 200);
           }
         }, true);
       </script>

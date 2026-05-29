@@ -33,6 +33,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to new_session_path
     assert_empty cookies[:session_id]
+    assert_equal true, flash[:channel_logged_out]
   end
 
   test "logout button shuts down ChannelTalk member session" do
@@ -46,6 +47,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "form[data-channel-logout-form]"
     assert_includes response.body, 'ChannelIO("shutdown")'
+    assert_includes response.body, "clearChannelTalkBrowserState"
   ensure
     ENV["CHANNELTALK_PLUGIN_KEY"] = previous_plugin_key
   end
