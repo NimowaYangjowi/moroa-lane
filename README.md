@@ -1,8 +1,8 @@
 # Luma & Leaf
 
-Luma & Leaf is a Rails + SQLite commerce simulator for a ChannelTalk technical interview.
+Luma & Leaf is a Rails + SQLite commerce demo for a realistic skincare shop.
 
-The goal is to look like a realistic DTC skincare shop while staying intentionally small. The app is not a full commerce platform. It exists to explain how ChannelTalk can identify a visitor, attach member data after login, and give a support team useful shopping context.
+The goal is to look like a realistic DTC skincare shop while staying intentionally small. The app is not a full commerce platform. It shows how ChannelTalk can identify a visitor, attach member data after login, and give a support team useful shopping context.
 
 ## What This Demonstrates
 
@@ -36,6 +36,21 @@ bin/dev
 Open `http://localhost:3001`.
 
 `bin/dev` uses port 3001 by default because port 3000 is often already occupied during local development.
+
+## GitHub Pages
+
+The static preview is published from `docs/`:
+
+https://nimowayangjowi.github.io/luma-and-leaf/
+
+To refresh the static preview after changing Rails views, run the Rails server and export again:
+
+```sh
+bin/dev
+script/export_static_pages
+```
+
+GitHub Pages can show the storefront screens, but it cannot run Rails actions such as real login, signup, cart updates, or SQLite-backed account pages. Those flows run in the local Rails app.
 
 To use another port:
 

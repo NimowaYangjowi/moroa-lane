@@ -5,7 +5,7 @@ require "net/http"
 require "uri"
 
 BASE_URL = ENV.fetch("STATIC_EXPORT_BASE_URL", "http://127.0.0.1:3001")
-PAGES_BASE_PATH = ENV.fetch("PAGES_BASE_PATH", "/channeltalk")
+PAGES_BASE_PATH = ENV.fetch("PAGES_BASE_PATH", "/luma-and-leaf")
 OUTPUT_DIR = File.expand_path("../docs", __dir__)
 
 PAGES = {
