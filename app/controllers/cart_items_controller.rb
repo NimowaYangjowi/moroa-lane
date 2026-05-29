@@ -2,10 +2,12 @@ class CartItemsController < ApplicationController
   def create
     product = Product.find(params[:product_id])
     cart_item = current_user.cart_items.find_or_initialize_by(product:)
-    cart_item.quantity = [ cart_item.quantity.to_i + quantity_param, 9 ].min
+    existing_item = cart_item.persisted?
+    cart_item.quantity = quantity_param
     cart_item.save!
 
-    redirect_to cart_path, notice: "#{product.name} was added to your cart."
+    message = existing_item ? "#{product.name} was updated in your cart." : "#{product.name} was added to your cart."
+    redirect_to cart_path, notice: message
   end
 
   def update

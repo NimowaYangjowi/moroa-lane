@@ -10,6 +10,7 @@ class ProductsController < ApplicationController
     remember_recent_product(@product)
     record_product_view(@product)
     @recent_products = Product.where(slug: session[:recent_product_slugs]).where.not(id: @product.id)
+    @cart_item = current_user&.cart_items&.find_by(product: @product)
   end
 
   private

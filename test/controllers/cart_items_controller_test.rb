@@ -5,7 +5,7 @@ class CartItemsControllerTest < ActionDispatch::IntegrationTest
     sign_in_as users(:one)
   end
 
-  test "should create cart item" do
+  test "should create cart item with requested quantity" do
     CartItem.where(user: users(:one), product: products(:two)).delete_all
 
     assert_difference("CartItem.count", 1) do
@@ -13,6 +13,17 @@ class CartItemsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_redirected_to cart_path
+    assert_equal 2, users(:one).cart_items.find_by!(product: products(:two)).quantity
+  end
+
+  test "should set existing cart item to requested quantity" do
+    assert_no_difference("CartItem.count") do
+      post cart_items_url, params: { product_id: products(:one).id, quantity: 2 }
+    end
+
+    assert_redirected_to cart_path
+    assert_equal "Cloud Barrier Cream was updated in your cart.", flash[:notice]
+    assert_equal 2, cart_items(:one).reload.quantity
   end
 
   test "should update cart item" do

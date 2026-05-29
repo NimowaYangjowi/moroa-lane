@@ -13,13 +13,13 @@
       <% if current_user %>
         <%= form_with url: cart_items_path, class: "inline-form", data: { turbo: false } do |form| %>
           <%= hidden_field_tag :product_id, @product.id %>
-          <%= number_field_tag :quantity, 1, min: 1, max: 9, class: "quantity-input", aria: { label: "Quantity" } %>
-          <%= form.submit "Add to cart", class: "button" %>
+          <%= number_field_tag :quantity, @cart_item&.quantity || 1, min: 1, max: 9, class: "quantity-input", aria: { label: "Quantity" } %>
+          <%= form.submit @cart_item ? "Update cart" : "Add to cart", class: "button" %>
         <% end %>
-        <span>Cart context becomes part of the support story.</span>
+        <span><%= @cart_item ? "This item is already in your cart." : "Choose a quantity before adding this item." %></span>
       <% else %>
         <%= link_to "Log in to add to cart", new_session_path, class: "button" %>
-        <span>Login turns this visitor into a known member.</span>
+        <span>Sign in to save this product to your cart.</span>
       <% end %>
     </div>
 
