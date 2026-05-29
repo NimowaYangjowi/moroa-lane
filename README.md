@@ -30,15 +30,19 @@ The goal is to look like a realistic DTC skincare shop while staying intentional
 ```sh
 bundle install
 bin/rails db:setup
-bin/rails server
+bin/dev
 ```
 
-Open `http://localhost:3000`.
+Open `http://localhost:3001`.
 
-If port 3000 is already in use:
+`bin/dev` uses port 3001 by default because port 3000 is often already occupied during local development.
+
+To use another port:
 
 ```sh
-bin/rails server -p 3001
+PORT=3002 bin/dev
+# or
+bin/dev -p 4000
 ```
 
 If the database already exists, run:
@@ -62,7 +66,7 @@ To boot the real SDK, set:
 
 ```sh
 export CHANNELTALK_PLUGIN_KEY="your_plugin_key"
-bin/rails server
+bin/dev
 ```
 
 For a production-like member hash demo, also set:

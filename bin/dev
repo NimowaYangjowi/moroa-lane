@@ -1,2 +1,7 @@
 #!/usr/bin/env ruby
-exec "./bin/rails", "server", *ARGV
+args = ARGV.dup
+has_port = args.any? { |arg| arg == "-p" || arg == "--port" || arg.start_with?("--port=") }
+
+args = [ "-p", ENV.fetch("PORT", "3001"), *args ] unless has_port
+
+exec "./bin/rails", "server", *args
