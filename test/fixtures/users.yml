@@ -1,0 +1,15 @@
+<% password_digest = BCrypt::Password.create("password") %>
+
+one:
+  name: One Customer
+  email_address: one@example.com
+  password_digest: <%= password_digest %>
+  customer_tier: New
+  skin_type: Dry skin
+
+two:
+  name: Two Customer
+  email_address: two@example.com
+  password_digest: <%= password_digest %>
+  customer_tier: VIP
+  skin_type: Sensitive skin

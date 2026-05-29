@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  resource :account, only: :show, controller: :account
+  resource :registration, only: %i[new create]
+  resource :session
+  resources :passwords, param: :token
   root "home#index"
   resources :products, only: %i[index show]
   get "home/index"

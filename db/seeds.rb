@@ -66,3 +66,19 @@ products.each do |attributes|
     product.update!(attributes)
   end
 end
+
+demo_user = User.find_or_initialize_by(email_address: "jiwoo@example.com")
+demo_user.update!(
+  name: "Jiwoo Kim",
+  password: "password123",
+  password_confirmation: "password123",
+  customer_tier: "New",
+  skin_type: "Combination skin"
+)
+
+Product.featured.limit(2).each_with_index do |product, index|
+  ProductView.find_or_initialize_by(
+    user: demo_user,
+    product: product
+  ).update!(viewed_at: (index + 1).hours.ago)
+end

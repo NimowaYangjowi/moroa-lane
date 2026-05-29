@@ -1,0 +1,29 @@
+<section class="auth-shell">
+  <div class="auth-panel">
+    <p class="eyebrow">Member identity</p>
+    <h1>Log in to become a known customer.</h1>
+    <p>
+      After login, the demo can explain how a stable member ID connects the shopping account
+      to ChannelTalk support history.
+    </p>
+
+    <%= form_with url: session_path, class: "form-stack" do |form| %>
+      <label>
+        Email
+        <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "jiwoo@example.com", value: params[:email_address] %>
+      </label>
+
+      <label>
+        Password
+        <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "At least 8 characters", maxlength: 72 %>
+      </label>
+
+      <%= form.submit "Log in", class: "button" %>
+    <% end %>
+
+    <div class="auth-links">
+      <%= link_to "Create an account", new_registration_path %>
+      <%= link_to "Forgot password?", new_password_path %>
+    </div>
+  </div>
+</section>

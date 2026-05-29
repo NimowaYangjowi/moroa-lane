@@ -1,0 +1,50 @@
+<section class="auth-shell">
+  <div class="auth-panel">
+    <p class="eyebrow">Create member</p>
+    <h1>Join Luma & Leaf.</h1>
+    <p>
+      This turns an anonymous visitor into a shop member. In ChannelTalk terms, the demo now has
+      a stable `memberId`, name, email, signup date, and customer attributes to send.
+    </p>
+
+    <% if @user.errors.any? %>
+      <div class="error-box">
+        <strong>Please check these fields:</strong>
+        <ul>
+          <% @user.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <%= form_with model: @user, url: registration_path, class: "form-stack" do |form| %>
+      <label>
+        Name
+        <%= form.text_field :name, required: true, autocomplete: "name", placeholder: "Jiwoo Kim" %>
+      </label>
+
+      <label>
+        Email
+        <%= form.email_field :email_address, required: true, autocomplete: "username", placeholder: "jiwoo@example.com" %>
+      </label>
+
+      <label>
+        Skin type
+        <%= form.select :skin_type, [ "Dry skin", "Sensitive skin", "Combination skin", "Oily skin", "Normal skin" ], {}, required: true %>
+      </label>
+
+      <label>
+        Password
+        <%= form.password_field :password, required: true, autocomplete: "new-password", placeholder: "At least 8 characters", maxlength: 72 %>
+      </label>
+
+      <label>
+        Confirm password
+        <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", placeholder: "Repeat password", maxlength: 72 %>
+      </label>
+
+      <%= form.submit "Create account", class: "button" %>
+    <% end %>
+  </div>
+</section>

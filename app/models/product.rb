@@ -1,4 +1,7 @@
 class Product < ApplicationRecord
+  has_many :product_views, dependent: :destroy
+  has_many :viewers, through: :product_views, source: :user
+
   validates :name, :slug, :category, :description, :price_cents, :image_url, :skin_type, presence: true
   validates :slug, uniqueness: true
   validates :price_cents, numericality: { greater_than: 0 }

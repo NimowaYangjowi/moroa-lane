@@ -1,0 +1,61 @@
+<section class="page-hero compact-hero">
+  <p class="eyebrow">Customer profile</p>
+  <h1><%= current_user.name %></h1>
+  <p>
+    This is the customer record the shop knows. ChannelTalk can use these values to show the
+    support team who is asking for help.
+  </p>
+</section>
+
+<section class="section dashboard-grid">
+  <div class="profile-panel">
+    <p class="eyebrow">Member fields</p>
+    <h2>Known customer</h2>
+    <dl class="definition-list">
+      <div>
+        <dt>memberId</dt>
+        <dd><%= current_user.member_id %></dd>
+      </div>
+      <div>
+        <dt>Name</dt>
+        <dd><%= current_user.name %></dd>
+      </div>
+      <div>
+        <dt>Email</dt>
+        <dd><%= current_user.email_address %></dd>
+      </div>
+      <div>
+        <dt>Signup date</dt>
+        <dd><%= current_user.created_at.to_date.to_fs(:long) %></dd>
+      </div>
+      <div>
+        <dt>Customer tier</dt>
+        <dd><%= current_user.customer_tier %></dd>
+      </div>
+      <div>
+        <dt>Skin type</dt>
+        <dd><%= current_user.skin_type %></dd>
+      </div>
+    </dl>
+  </div>
+
+  <div class="profile-panel">
+    <p class="eyebrow">Recently viewed</p>
+    <h2>Product context</h2>
+    <% if @recent_product_views.any? %>
+      <div class="mini-list">
+        <% @recent_product_views.each do |view| %>
+          <%= link_to product_path(view.product), class: "mini-item" do %>
+            <%= image_tag view.product.image_url, alt: view.product.name %>
+            <span>
+              <strong><%= view.product.name %></strong>
+              <small><%= time_ago_in_words(view.viewed_at) %> ago</small>
+            </span>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="muted-copy">Open a product detail page while logged in to attach browsing context to this customer.</p>
+    <% end %>
+  </div>
+</section>

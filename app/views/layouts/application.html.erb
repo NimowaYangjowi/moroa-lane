@@ -29,10 +29,24 @@
       <nav class="site-nav" aria-label="Primary">
         <%= link_to "Shop", products_path %>
         <%= link_to "Demo Scope", root_path(anchor: "scope") %>
+        <% if current_user %>
+          <%= link_to "My page", account_path %>
+          <%= button_to "Log out", session_path, method: :delete, class: "nav-button" %>
+        <% else %>
+          <%= link_to "Log in", new_session_path %>
+          <%= link_to "Join", new_registration_path %>
+        <% end %>
       </nav>
     </header>
 
     <main>
+      <% if flash[:notice].present? || flash[:alert].present? %>
+        <div class="flash-wrap">
+          <%= tag.div(flash[:notice], class: "flash notice") if flash[:notice].present? %>
+          <%= tag.div(flash[:alert], class: "flash alert") if flash[:alert].present? %>
+        </div>
+      <% end %>
+
       <%= yield %>
     </main>
   </body>

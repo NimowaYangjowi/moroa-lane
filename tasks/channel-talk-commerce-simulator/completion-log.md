@@ -67,6 +67,40 @@
 
 - `ProductView`는 Phase 3에서 `User` 모델이 생긴 뒤 생성하는 방향으로 조정한다.
 
+## Phase 3: Auth And Customer Profile
+
+완료일: 2026-05-29
+커밋: 예정
+
+### 완료한 것
+
+- Rails 기본 인증 생성기를 적용했다.
+- 회원가입 화면과 `RegistrationsController`를 추가했다.
+- `User`에 이름, 이메일, 고객 등급, 피부 타입, `memberId` 메서드를 추가했다.
+- 로그인/로그아웃 내비게이션을 추가했다.
+- 마이페이지에서 고객 프로필과 최근 본 상품을 보여주도록 했다.
+- 로그인한 고객이 상품 상세를 보면 `ProductView`로 조회 이력이 저장되게 했다.
+- 데모 계정 `jiwoo@example.com / password123`을 seed에 추가했다.
+
+### 검증한 것
+
+- `bin/rails db:migrate db:seed` 성공.
+- `bin/rails test` 통과.
+
+### 회귀 위험
+
+- Rails 인증 생성기가 만든 비밀번호 재설정 화면은 아직 기본 UI에 가깝다.
+- 최근 본 상품은 상품 상세에 들어갈 때마다 기록되므로 중복 조회 기록이 쌓일 수 있다.
+
+### 개선사항
+
+- Phase 4에서 마이페이지에 장바구니와 주문 이력을 붙인다.
+- Phase 5에서 `current_user.member_id`, 이름, 이메일, 가입일, 최근 본 상품을 채널톡 payload로 노출한다.
+
+### 다음 phase 계획 변경
+
+- 변경 없음
+
 ## Phase 1: Setup
 
 완료일: 2026-05-29
