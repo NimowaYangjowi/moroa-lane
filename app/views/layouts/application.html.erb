@@ -33,7 +33,7 @@
         <% if current_user %>
           <%= link_to "My page", account_path %>
           <%= link_to "Cart (#{current_user.cart_items_count})", cart_path %>
-          <%= button_to "Log out", session_path, method: :delete, class: "nav-button" %>
+          <%= button_to "Log out", session_path, method: :delete, class: "nav-button", form: { data: { turbo: false } } %>
         <% else %>
           <%= link_to "Log in", new_session_path %>
           <%= link_to "Join", new_registration_path %>

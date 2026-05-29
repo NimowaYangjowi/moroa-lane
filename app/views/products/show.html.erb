@@ -11,7 +11,7 @@
 
     <div class="product-actions">
       <% if current_user %>
-        <%= form_with url: cart_items_path, class: "inline-form" do |form| %>
+        <%= form_with url: cart_items_path, class: "inline-form", data: { turbo: false } do |form| %>
           <%= hidden_field_tag :product_id, @product.id %>
           <%= number_field_tag :quantity, 1, min: 1, max: 9, class: "quantity-input", aria: { label: "Quantity" } %>
           <%= form.submit "Add to cart", class: "button" %>

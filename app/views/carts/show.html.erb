@@ -20,11 +20,11 @@
               <p><%= money(item.product.price_cents) %> each</p>
             </div>
             <div class="cart-controls">
-              <%= form_with model: item, url: cart_item_path(item), method: :patch, class: "quantity-form" do %>
+              <%= form_with model: item, url: cart_item_path(item), method: :patch, class: "quantity-form", data: { turbo: false } do %>
                 <%= number_field_tag :quantity, item.quantity, min: 1, max: 9, class: "quantity-input", aria: { label: "Quantity" } %>
                 <%= submit_tag "Update", class: "button secondary-button" %>
               <% end %>
-              <%= button_to "Remove", cart_item_path(item), method: :delete, class: "text-button" %>
+              <%= button_to "Remove", cart_item_path(item), method: :delete, class: "text-button", form: { data: { turbo: false } } %>
             </div>
             <strong><%= money(item.line_total_cents) %></strong>
           </article>

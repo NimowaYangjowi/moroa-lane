@@ -76,6 +76,10 @@ demo_user.update!(
   skin_type: "Combination skin"
 )
 
+demo_user.product_views.destroy_all
+demo_user.cart_items.destroy_all
+demo_user.orders.destroy_all
+
 Product.featured.limit(2).each_with_index do |product, index|
   ProductView.find_or_initialize_by(
     user: demo_user,

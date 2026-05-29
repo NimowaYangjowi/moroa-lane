@@ -6,10 +6,11 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
   test "new" do
     get new_session_path
     assert_response :success
-    assert_select "input[name=email_address][type=text][value]", false
-    assert_select "input[name=password][value]", false
+    assert_select "input[name=login_email][type=text][value]", false
+    assert_select "input[name=login_password][value]", false
     assert_select "code", "jiwoo@example.com"
     assert_select "code", "password123"
+    assert_select "form[data-turbo=false]"
   end
 
   test "create with valid credentials" do

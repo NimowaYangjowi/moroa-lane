@@ -384,7 +384,7 @@ a {
 .auth-shell {
   display: grid;
   min-height: calc(100vh - 72px);
-  padding: 56px 20px;
+  padding: 32px 20px;
   place-items: center;
 }
 
@@ -392,25 +392,25 @@ a {
   background: #fff;
   border: 1px solid #e6ddd2;
   max-width: 560px;
-  padding: 36px;
+  padding: 28px;
   width: 100%;
 }
 
 .auth-panel h1 {
-  font-size: clamp(36px, 6vw, 56px);
+  font-size: clamp(34px, 5vw, 48px);
   line-height: 1;
-  margin: 0 0 16px;
+  margin: 0 0 14px;
 }
 
 .auth-panel p {
   color: #60564d;
   line-height: 1.65;
-  margin: 0 0 24px;
+  margin: 0 0 18px;
 }
 
 .form-stack {
   display: grid;
-  gap: 16px;
+  gap: 14px;
 }
 
 .form-stack label {
@@ -426,9 +426,15 @@ a {
   border: 1px solid #d8cbbd;
   color: #1d1b18;
   font: inherit;
-  min-height: 48px;
+  min-height: 44px;
   padding: 0 14px;
   width: 100%;
+}
+
+.form-stack input[type="submit"].button {
+  background: #1d1b18;
+  border-color: #1d1b18;
+  color: #fff;
 }
 
 .auth-links {
@@ -447,9 +453,9 @@ a {
   background: #f7f3ee;
   border: 1px solid #e6ddd2;
   display: grid;
-  gap: 8px;
-  margin-bottom: 20px;
-  padding: 16px;
+  gap: 6px;
+  margin-bottom: 16px;
+  padding: 14px;
 }
 
 .demo-credentials p {
@@ -466,7 +472,7 @@ a {
   color: #1d1b18;
   display: block;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-  padding: 10px 12px;
+  padding: 8px 12px;
 }
 
 .error-box {
@@ -715,6 +721,16 @@ a {
 
   .flash-wrap {
     top: 116px;
+  }
+
+  .channel-fallback-button {
+    bottom: auto;
+    box-shadow: none;
+    justify-content: center;
+    margin: 24px 20px;
+    position: static;
+    right: auto;
+    width: calc(100% - 40px);
   }
 
   .hero {
