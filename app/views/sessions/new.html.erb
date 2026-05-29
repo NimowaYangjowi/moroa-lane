@@ -7,15 +7,21 @@
       to ChannelTalk support history.
     </p>
 
-    <%= form_with url: session_path, class: "form-stack" do |form| %>
+    <div class="demo-credentials">
+      <p>Demo account</p>
+      <code>jiwoo@example.com</code>
+      <code>password123</code>
+    </div>
+
+    <%= form_with url: session_path, class: "form-stack", html: { autocomplete: "off" } do |form| %>
       <label>
         Email
-        <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "jiwoo@example.com", value: params[:email_address] %>
+        <%= form.text_field :email_address, required: true, autofocus: true, inputmode: "email", autocomplete: "off", autocapitalize: "none", spellcheck: false, placeholder: "jiwoo@example.com", value: nil %>
       </label>
 
       <label>
         Password
-        <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "At least 8 characters", maxlength: 72 %>
+        <%= form.password_field :password, required: true, autocomplete: "new-password", placeholder: "password123", maxlength: 72, value: nil %>
       </label>
 
       <%= form.submit "Log in", class: "button" %>

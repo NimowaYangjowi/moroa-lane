@@ -443,6 +443,32 @@ a {
   font-weight: 800;
 }
 
+.demo-credentials {
+  background: #f7f3ee;
+  border: 1px solid #e6ddd2;
+  display: grid;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 16px;
+}
+
+.demo-credentials p {
+  color: #7d5f38;
+  font-size: 13px;
+  font-weight: 900;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.demo-credentials code {
+  background: #fff;
+  border: 1px solid #e6ddd2;
+  color: #1d1b18;
+  display: block;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  padding: 10px 12px;
+}
+
 .error-box {
   background: #fff3ef;
   border: 1px solid #e4b8a9;
