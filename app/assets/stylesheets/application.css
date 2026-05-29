@@ -87,6 +87,24 @@ a {
   color: #8e2e20;
 }
 
+.channel-fallback-button {
+  align-items: center;
+  background: #1d1b18;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  bottom: 24px;
+  box-shadow: 0 18px 44px rgba(29, 27, 24, 0.22);
+  color: #fff;
+  display: inline-flex;
+  font-size: 14px;
+  font-weight: 900;
+  min-height: 56px;
+  padding: 0 18px;
+  position: fixed;
+  right: 24px;
+  text-decoration: none;
+  z-index: 60;
+}
+
 .hero {
   align-items: center;
   background:
@@ -613,6 +631,49 @@ a {
   color: #7a7066;
 }
 
+.debug-layout {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.debug-panel {
+  background: #1d1b18;
+  color: #f7f3ee;
+  grid-column: 1 / -1;
+  overflow: hidden;
+}
+
+.debug-panel-header {
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 24px;
+}
+
+.debug-panel-header .eyebrow {
+  color: #f3d8b7;
+  margin: 0;
+}
+
+.debug-panel-header .secondary-button {
+  border-color: #f7f3ee;
+  color: #f7f3ee;
+}
+
+.debug-panel pre {
+  margin: 0;
+  overflow-x: auto;
+  padding: 24px;
+}
+
+.debug-panel code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
 @media (max-width: 720px) {
   .site-header {
     align-items: flex-start;
@@ -653,6 +714,7 @@ a {
   .product-detail,
   .dashboard-grid,
   .cart-layout,
+  .debug-layout,
   .cart-row {
     grid-template-columns: 1fr;
   }

@@ -1,0 +1,44 @@
+<section class="page-hero compact-hero">
+  <p class="eyebrow">ChannelTalk payload</p>
+  <h1>Debug the customer identity sent to ChannelTalk.</h1>
+  <p>
+    This page shows the boot options the Web SDK receives. It is the developer-facing
+    version of the customer profile a support team can use during a conversation.
+  </p>
+</section>
+
+<section class="section debug-layout">
+  <div class="profile-panel">
+    <p class="eyebrow">SDK status</p>
+    <h2><%= @sdk_enabled ? "Ready to boot" : "Plugin key missing" %></h2>
+    <% if @sdk_enabled %>
+      <p class="muted-copy">`CHANNELTALK_PLUGIN_KEY` is present, so the real ChannelTalk script will boot on each page.</p>
+    <% else %>
+      <p class="muted-copy">Set `CHANNELTALK_PLUGIN_KEY` to boot the real SDK. Until then, the app shows a local demo button.</p>
+    <% end %>
+  </div>
+
+  <div class="profile-panel">
+    <p class="eyebrow">Identity type</p>
+    <% if current_user %>
+      <h2>Member</h2>
+      <p class="muted-copy">
+        The shop knows this customer as <strong><%= current_user.member_id %></strong>.
+        ChannelTalk can use that stable ID to connect future conversations.
+      </p>
+    <% else %>
+      <h2>Anonymous visitor</h2>
+      <p class="muted-copy">
+        No member ID is sent yet, so ChannelTalk treats this browser session as a non-member visitor.
+      </p>
+    <% end %>
+  </div>
+
+  <div class="debug-panel">
+    <div class="debug-panel-header">
+      <p class="eyebrow">Boot options</p>
+      <%= link_to "Open products", products_path, class: "button secondary-button" %>
+    </div>
+    <pre><code><%= JSON.pretty_generate(@boot_options) %></code></pre>
+  </div>
+</section>

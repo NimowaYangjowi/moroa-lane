@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   resource :cart, only: :show
   resources :cart_items, only: %i[create update destroy]
   resource :account, only: :show, controller: :account
+  resource :channel_debug, only: :show, path: "debug/channel", controller: :channel_debug
   resource :registration, only: %i[new create]
   resource :session
   resources :passwords, param: :token

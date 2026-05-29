@@ -34,6 +34,39 @@
 
 - 변경 없음
 
+## Phase 5: Channel SDK
+
+완료일: 2026-05-29
+커밋: 예정
+
+### 완료한 것
+
+- 공식 ChannelTalk Web SDK 문서를 확인하고 MPA 방식의 SDK boot 스크립트를 레이아웃에 추가했다.
+- `CHANNELTALK_PLUGIN_KEY`가 있으면 실제 SDK를 boot하고, 없으면 로컬 데모 버튼을 보여주게 했다.
+- `ChannelPayload` 객체로 익명 방문자와 로그인 회원의 boot payload를 분리했다.
+- 로그인 회원 payload에 `memberId`, 이름, 이메일, 가입일, 고객 등급, 피부 타입, 최근 본 상품, 장바구니 수량, 장바구니 합계, 최근 주문일을 포함했다.
+- `CHANNELTALK_MEMBER_HASH_SECRET`이 있으면 `memberHash`를 포함하도록 했다.
+- `/debug/channel` 디버그 패널을 추가했다.
+
+### 검증한 것
+
+- `bin/rails test` 통과.
+- plugin key가 없어도 앱이 깨지지 않고 로컬 데모 버튼이 표시되는 구조를 확인했다.
+
+### 회귀 위험
+
+- 실제 ChannelTalk plugin key로는 아직 브라우저 실검증을 하지 않았다.
+- custom profile field 이름은 데모 설명용으로 정했다. 실제 고객사 도입 시 필드 네이밍은 채널톡 운영 정책에 맞춰 조정해야 한다.
+
+### 개선사항
+
+- Phase 6에서 README에 `CHANNELTALK_PLUGIN_KEY`, `CHANNELTALK_MEMBER_HASH_SECRET` 설정 방법을 적는다.
+- Phase 6에서 공식 문서 기준으로 `memberId`와 member hash 주의사항을 면접용 설명에 추가한다.
+
+### 다음 phase 계획 변경
+
+- 변경 없음
+
 ## Phase 4: Cart And Orders
 
 완료일: 2026-05-29
