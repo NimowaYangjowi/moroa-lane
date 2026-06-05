@@ -5,4 +5,10 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     get home_index_url
     assert_response :success
   end
+
+  test "should get channel talk guide" do
+    get channel_talk_guide_url
+    assert_response :success
+    assert_select "h1", text: /ChannelTalk/
+  end
 end

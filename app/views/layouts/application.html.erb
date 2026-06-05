@@ -28,6 +28,7 @@
       <%= link_to "Moroa Lane", root_path, class: "brand-link" %>
       <nav class="site-nav" aria-label="Primary">
         <%= link_to "Shop", products_path %>
+        <%= link_to "Guide", channel_talk_guide_path %>
         <%= link_to "About", root_path(anchor: "scope") %>
         <% if current_user %>
           <%= link_to "My page", account_path %>

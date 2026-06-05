@@ -17,6 +17,7 @@ PAGES = {
   "/products/rice-milk-cleanser" => "products/rice-milk-cleanser/index.html",
   "/products/night-reset-ampoule" => "products/night-reset-ampoule/index.html",
   "/products/soft-cotton-toner-pads" => "products/soft-cotton-toner-pads/index.html",
+  "/channel-talk-guide" => "channel-talk-guide/index.html",
   "/session/new" => "session/new/index.html",
   "/registration/new" => "registration/new/index.html",
   "/debug/channel" => "care/index.html"
@@ -24,6 +25,10 @@ PAGES = {
 
 ASSET_FILES = {
   "app/assets/stylesheets/application.css" => "assets/application.css",
+  "app/assets/images/channel_guide/01-anonymous-home.png" => "assets/channel_guide/01-anonymous-home.png",
+  "app/assets/images/channel_guide/02-product-context.png" => "assets/channel_guide/02-product-context.png",
+  "app/assets/images/channel_guide/03-member-profile.png" => "assets/channel_guide/03-member-profile.png",
+  "app/assets/images/channel_guide/04-channel-payload.png" => "assets/channel_guide/04-channel-payload.png",
   "public/icon.png" => "icon.png",
   "public/icon.svg" => "icon.svg"
 }.freeze
@@ -48,8 +53,11 @@ def rewrite_html(html)
     .gsub(%r{<meta name="csrf-token".*?>\n?}, "")
     .gsub(%r{<input type="hidden" name="authenticity_token".*?>\n?}, "")
     .gsub(%r{href="/assets/[^"]+\.css"}, %(href="#{PAGES_BASE_PATH}/assets/application.css"))
+    .gsub(%r{src="/assets/channel_guide/([^"]+)-[0-9a-f]{8}\.png"}) { %(src="#{PAGES_BASE_PATH}/assets/channel_guide/#{$1}.png") }
+    .gsub(%r{src="/assets/channel_guide/([^"]+)"}, %(src="#{PAGES_BASE_PATH}/assets/channel_guide/\\1"))
     .gsub(%r{href="/icon\.png"}, %(href="#{PAGES_BASE_PATH}/icon.png"))
     .gsub(%r{href="/icon\.svg"}, %(href="#{PAGES_BASE_PATH}/icon.svg"))
+    .gsub(%r{href="/channel-talk-guide"}, %(href="#{PAGES_BASE_PATH}/channel-talk-guide/"))
     .gsub(%r{href="/products/([^"#]+)"}, %(href="#{PAGES_BASE_PATH}/products/\\1/"))
     .gsub(%r{href="/products"}, %(href="#{PAGES_BASE_PATH}/products/"))
     .gsub(%r{href="/session/new"}, %(href="#{PAGES_BASE_PATH}/session/new/"))

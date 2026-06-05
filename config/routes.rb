@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
   root "home#index"
+  get "channel-talk-guide", to: "home#channel_talk_guide", as: :channel_talk_guide
   resources :products, only: %i[index show]
   get "home/index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
