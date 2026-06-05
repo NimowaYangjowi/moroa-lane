@@ -5,7 +5,7 @@
     <p class="eyebrow">Enterprise adoption note</p>
     <h1>ChannelTalk customer identity flow</h1>
     <p>
-      고객이 처음 말을 걸고, 회원으로 식별되고, 다음 상담에서 이전 기록이 이어지는 과정을 Moroa Lane 데모 화면으로 압축해 본다.
+      고객이 처음 말을 걸고, 회원으로 식별되고, 다음 상담에서 이전 기록이 이어지는 과정을 Moroa Lane 데모 화면으로 압축해 봅니다.
     </p>
   </section>
 
@@ -13,35 +13,35 @@
     <div>
       <span>01</span>
       <strong>Anonymous</strong>
-      <p>로그인 전 방문자는 브라우저 단위로 구분된다.</p>
+      <p>로그인 전 방문자는 브라우저 단위로 구분됩니다.</p>
     </div>
     <div>
       <span>02</span>
       <strong>Member</strong>
-      <p>로그인 후 `memberId`가 붙으면 한 명의 회원으로 보인다.</p>
+      <p>로그인 후 `memberId`가 붙으면 한 명의 회원으로 보입니다.</p>
     </div>
     <div>
       <span>03</span>
       <strong>Profile</strong>
-      <p>이름, 이메일, 장바구니, 최근 본 상품은 쇼핑몰 DB에서 온다.</p>
+      <p>이름, 이메일, 장바구니, 최근 본 상품은 쇼핑몰 DB에서 옵니다.</p>
     </div>
     <div>
       <span>04</span>
       <strong>History</strong>
-      <p>상담 기록은 같은 고객 키를 기준으로 다시 연결된다.</p>
+      <p>상담 기록은 같은 고객 키를 기준으로 다시 연결됩니다.</p>
     </div>
   </section>
 
   <section class="guide-shot-block">
     <figure>
       <%= image_tag "channel_guide/01-anonymous-home.png", alt: "Moroa Lane home page before the visitor logs in", loading: "lazy", decoding: "async" %>
-      <figcaption>처음 방문한 고객은 아직 이름표가 없다.</figcaption>
+      <figcaption>처음 방문한 고객은 아직 이름표가 없습니다.</figcaption>
     </figure>
     <div class="guide-copy">
       <p class="eyebrow">First chat</p>
-      <h2>처음 상담은 익명 방문자에서 시작된다.</h2>
+      <h2>처음 상담은 익명 방문자에서 시작됩니다.</h2>
       <p>
-        고객이 로그인하지 않은 채 채팅을 열면 채널톡은 쿠키와 로컬 스토리지로 같은 브라우저를 구분한다. 이 앱의 로그인 전 boot payload에는 `pluginKey`와 언어만 있다.
+        고객이 로그인하지 않은 채 채팅을 열면 채널톡은 쿠키와 로컬 스토리지로 같은 브라우저를 구분합니다. 이 앱의 로그인 전 boot payload에는 `pluginKey`와 언어만 있습니다.
       </p>
       <dl>
         <div>
@@ -50,7 +50,7 @@
         </div>
         <div>
           <dt>답변</dt>
-          <dd>브라우저 기준 익명 고객으로 구분된다. 연락처를 남기면 Lead, 로그인하면 Member가 된다.</dd>
+          <dd>브라우저 기준 익명 고객으로 구분됩니다. 연락처를 남기면 Lead, 로그인하면 Member가 됩니다.</dd>
         </div>
       </dl>
     </div>
@@ -59,13 +59,13 @@
   <section class="guide-shot-block alternate">
     <figure>
       <%= image_tag "channel_guide/02-product-context.png", alt: "Product detail page where a shopper can ask support for help choosing a serum", loading: "lazy", decoding: "async" %>
-      <figcaption>상품 상세 화면은 상담이 시작되기 가장 자연스러운 지점이다.</figcaption>
+      <figcaption>상품 상세 화면은 상담이 시작되기 가장 자연스러운 지점입니다.</figcaption>
     </figure>
     <div class="guide-copy">
       <p class="eyebrow">Shopping context</p>
-      <h2>상담창의 맥락은 고객이 보고 있던 화면에서 온다.</h2>
+      <h2>상담창의 맥락은 고객이 보고 있던 화면에서 옵니다.</h2>
       <p>
-        고객은 상품을 보다가 성분, 배송, 루틴 순서를 묻는다. 이 화면에서 생긴 최근 본 상품 기록은 로그인 후 고객 프로필의 `lastViewedProduct` 같은 속성으로 들어간다.
+        고객은 상품을 보다가 성분, 배송, 루틴 순서를 묻습니다. 이 화면에서 생긴 최근 본 상품 기록은 로그인 후 고객 프로필의 `lastViewedProduct` 같은 속성으로 들어갑니다.
       </p>
       <dl>
         <div>
@@ -74,7 +74,7 @@
         </div>
         <div>
           <dt>답변</dt>
-          <dd>서비스가 상품 조회, 장바구니, 주문 데이터를 profile 또는 tags로 넘기면 상담창에서 맥락으로 쓸 수 있다.</dd>
+          <dd>서비스가 상품 조회, 장바구니, 주문 데이터를 profile 또는 tags로 넘기면 상담창에서 맥락으로 쓸 수 있습니다.</dd>
         </div>
       </dl>
     </div>
@@ -83,13 +83,13 @@
   <section class="guide-shot-block">
     <figure>
       <%= image_tag "channel_guide/03-member-profile.png", alt: "Signed-in customer profile page with name, email, recent products, cart, and order history", loading: "lazy", decoding: "async" %>
-      <figcaption>로그인 후에는 쇼핑몰 회원 정보가 상담용 고객 정보가 된다.</figcaption>
+      <figcaption>로그인 후에는 쇼핑몰 회원 정보가 상담용 고객 정보가 됩니다.</figcaption>
     </figure>
     <div class="guide-copy">
       <p class="eyebrow">Profile source</p>
-      <h2>이름과 이메일은 채널톡이 만든 값이 아니다.</h2>
+      <h2>이름과 이메일은 채널톡이 만든 값이 아닙니다.</h2>
       <p>
-        이 앱은 Rails `users`, `product_views`, `cart_items`, `orders` 데이터를 모아 `memberId`, profile, tags를 만든다. 상담원 화면의 고객 정보는 이 payload가 채널톡에 전달된 결과다.
+        이 앱은 Rails `users`, `product_views`, `cart_items`, `orders` 데이터를 모아 `memberId`, profile, tags를 만듭니다. 상담원 화면의 고객 정보는 이 payload가 채널톡에 전달된 결과입니다.
       </p>
       <dl>
         <div>
@@ -98,7 +98,7 @@
         </div>
         <div>
           <dt>답변</dt>
-          <dd>내부 UUID처럼 변하지 않는 값을 `memberId`로 쓰면 이메일 변경과 상담 이력을 분리할 수 있다.</dd>
+          <dd>내부 UUID처럼 변하지 않는 값을 `memberId`로 쓰면 이메일 변경과 상담 이력을 분리할 수 있습니다.</dd>
         </div>
       </dl>
     </div>
@@ -107,9 +107,9 @@
   <section class="guide-data-map">
     <div class="guide-copy">
       <p class="eyebrow">Second chat</p>
-      <h2>두 번째 상담은 같은 `memberId`로 이어진다.</h2>
+      <h2>두 번째 상담은 같은 `memberId`로 이어집니다.</h2>
       <p>
-        같은 고객이 다시 로그인하면 채널톡은 같은 회원으로 본다. 서로 다른 브라우저라도 서비스가 같은 `memberId`를 보내면 이전 고객 정보와 상담 이력이 연결된다.
+        같은 고객이 다시 로그인하면 채널톡은 같은 회원으로 봅니다. 서로 다른 브라우저라도 서비스가 같은 `memberId`를 보내면 이전 고객 정보와 상담 이력이 연결됩니다.
       </p>
     </div>
     <div class="identity-flow" aria-label="ChannelTalk identity flow">
@@ -126,7 +126,7 @@
       <div>
         <span>Desk</span>
         <strong>Same customer</strong>
-        <small>프로필과 이전 상담 연결</small>
+        <small>프로필과 이전 상담이 연결됩니다.</small>
       </div>
     </div>
   </section>
@@ -134,13 +134,13 @@
   <section class="guide-shot-block alternate">
     <figure>
       <%= image_tag "channel_guide/04-channel-payload.png", alt: "Customer care page after the shopper is signed in", loading: "lazy", decoding: "async" %>
-      <figcaption>이 앱에서는 상담 원장 대신 전달 맥락을 보여준다.</figcaption>
+      <figcaption>이 앱에서는 상담 원장 대신 전달 맥락을 보여줍니다.</figcaption>
     </figure>
     <div class="guide-copy">
       <p class="eyebrow">After close</p>
-      <h2>상담 종료 후에는 상담 데이터가 채널톡 쪽에 남는다.</h2>
+      <h2>상담 종료 후에는 상담 데이터가 채널톡 쪽에 남습니다.</h2>
       <p>
-        종료된 상담에는 메시지, 담당자, 상담 태그, 상태, 응답 시간, 종료 시간이 남는다. Moroa Lane의 Rails DB에는 쇼핑 데이터가 남고, 실제 상담 원장은 채널톡 데이터다.
+        종료된 상담에는 메시지, 담당자, 상담 태그, 상태, 응답 시간, 종료 시간이 남습니다. Moroa Lane의 Rails DB에는 쇼핑 데이터가 남고, 실제 상담 원장은 채널톡 데이터입니다.
       </p>
       <dl>
         <div>
@@ -149,7 +149,7 @@
         </div>
         <div>
           <dt>답변</dt>
-          <dd>상담 상태, 태그, 담당자, 응답 시간, 고객 키가 남아 검색, 리포팅, 재문의 응대에 쓰인다.</dd>
+          <dd>상담 상태, 태그, 담당자, 응답 시간, 고객 키가 남아 검색, 리포팅, 재문의 응대에 쓰입니다.</dd>
         </div>
       </dl>
     </div>
