@@ -41,18 +41,8 @@
       <p class="eyebrow">First chat</p>
       <h2>처음 상담은 익명 방문자에서 시작됩니다.</h2>
       <p>
-        고객이 로그인하지 않은 채 채팅을 열면 채널톡은 쿠키와 로컬 스토리지로 같은 브라우저를 구분합니다. 이 앱의 로그인 전 boot payload에는 `pluginKey`와 언어만 있습니다.
+        고객이 로그인하지 않은 채 채팅을 열면 채널톡은 쿠키와 로컬 스토리지로 같은 브라우저를 구분합니다. 이때 채널톡 SDK를 켜는 설정 묶음에는 회원 식별자인 `memberId`와 고객 프로필이 들어가지 않습니다.
       </p>
-      <dl>
-        <div>
-          <dt>엔터프라이즈 질문</dt>
-          <dd>“회원이 아닌 고객도 추적되나요?”</dd>
-        </div>
-        <div>
-          <dt>답변</dt>
-          <dd>브라우저 기준 익명 고객으로 구분됩니다. 연락처를 남기면 Lead, 로그인하면 Member가 됩니다.</dd>
-        </div>
-      </dl>
     </div>
   </section>
 
@@ -67,16 +57,6 @@
       <p>
         고객은 상품을 보다가 성분, 배송, 루틴 순서를 묻습니다. 이 화면에서 생긴 최근 본 상품 기록은 로그인 후 고객 프로필의 `lastViewedProduct` 같은 속성으로 들어갑니다.
       </p>
-      <dl>
-        <div>
-          <dt>엔터프라이즈 질문</dt>
-          <dd>“상담원이 고객이 뭘 보고 있었는지 알 수 있나요?”</dd>
-        </div>
-        <div>
-          <dt>답변</dt>
-          <dd>서비스가 상품 조회, 장바구니, 주문 데이터를 profile 또는 tags로 넘기면 상담창에서 맥락으로 쓸 수 있습니다.</dd>
-        </div>
-      </dl>
     </div>
   </section>
 
@@ -91,16 +71,6 @@
       <p>
         이 앱은 Rails `users`, `product_views`, `cart_items`, `orders` 데이터를 모아 `memberId`, profile, tags를 만듭니다. 상담원 화면의 고객 정보는 이 payload가 채널톡에 전달된 결과입니다.
       </p>
-      <dl>
-        <div>
-          <dt>엔터프라이즈 질문</dt>
-          <dd>“이메일이 바뀌면 이력이 끊기나요?”</dd>
-        </div>
-        <div>
-          <dt>답변</dt>
-          <dd>내부 UUID처럼 변하지 않는 값을 `memberId`로 쓰면 이메일 변경과 상담 이력을 분리할 수 있습니다.</dd>
-        </div>
-      </dl>
     </div>
   </section>
 
@@ -142,16 +112,35 @@
       <p>
         종료된 상담에는 메시지, 담당자, 상담 태그, 상태, 응답 시간, 종료 시간이 남습니다. Moroa Lane의 Rails DB에는 쇼핑 데이터가 남고, 실제 상담 원장은 채널톡 데이터입니다.
       </p>
-      <dl>
-        <div>
-          <dt>엔터프라이즈 질문</dt>
-          <dd>“나중에 감사나 CS 리포트에 쓸 수 있나요?”</dd>
-        </div>
-        <div>
-          <dt>답변</dt>
-          <dd>상담 상태, 태그, 담당자, 응답 시간, 고객 키가 남아 검색, 리포팅, 재문의 응대에 쓰입니다.</dd>
-        </div>
-      </dl>
+    </div>
+  </section>
+
+  <section class="guide-qa" aria-labelledby="enterprise-qa-title">
+    <div class="guide-qa-header">
+      <p class="eyebrow">Enterprise Q&A</p>
+      <h2 id="enterprise-qa-title">도입 미팅에서 나올 질문입니다.</h2>
+    </div>
+
+    <div class="guide-qa-list">
+      <article>
+        <h3>회원이 아닌 고객도 추적되나요?</h3>
+        <p>브라우저 기준 익명 고객으로 구분됩니다. 연락처를 남기면 Lead, 로그인하면 Member가 됩니다.</p>
+      </article>
+
+      <article>
+        <h3>상담원이 고객이 무엇을 보고 있었는지 알 수 있나요?</h3>
+        <p>서비스가 상품 조회, 장바구니, 주문 데이터를 profile 또는 tags로 넘기면 상담창에서 맥락으로 쓸 수 있습니다.</p>
+      </article>
+
+      <article>
+        <h3>이메일이 바뀌면 이력이 끊기나요?</h3>
+        <p>내부 UUID처럼 변하지 않는 값을 `memberId`로 쓰면 이메일 변경과 상담 이력을 분리할 수 있습니다.</p>
+      </article>
+
+      <article>
+        <h3>나중에 감사나 CS 리포트에 쓸 수 있나요?</h3>
+        <p>상담 상태, 태그, 담당자, 응답 시간, 고객 키가 남아 검색, 리포팅, 재문의 응대에 쓰입니다.</p>
+      </article>
     </div>
   </section>
 </article>
