@@ -2,7 +2,7 @@ require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
   test "downcases and strips email_address" do
-    user = User.new(name: "Downcase", email_address: " DOWNCASED@EXAMPLE.COM ", password: "password123")
+    user = User.new(name: "Jiwoo Han", email_address: " DOWNCASED@EXAMPLE.COM ", password: "password123")
     assert_equal("downcased@example.com", user.email_address)
   end
 
@@ -12,7 +12,7 @@ class UserTest < ActiveSupport::TestCase
 
   test "assigns uuid on create" do
     user = User.create!(
-      name: "New Customer",
+      name: "Jiwoo Han",
       email_address: "new@example.com",
       password: "password123",
       password_confirmation: "password123",

@@ -69,7 +69,7 @@ end
 
 demo_user = User.find_or_initialize_by(email_address: "jiwoo@example.com")
 demo_user.update!(
-  name: "Jiwoo Kim",
+  name: "Jiwoo Han",
   password: "password123",
   password_confirmation: "password123",
   customer_tier: "New",

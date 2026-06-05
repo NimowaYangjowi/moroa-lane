@@ -10,7 +10,7 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
     assert_difference("User.count", 1) do
       post registration_url, params: {
         user: {
-          name: "Jiwoo Kim",
+          name: "Jiwoo Han",
           email_address: "jiwoo@example.com",
           skin_type: "Combination skin",
           password: "password123",
