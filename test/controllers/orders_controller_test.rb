@@ -1,6 +1,8 @@
 require "test_helper"
 
 class OrdersControllerTest < ActionDispatch::IntegrationTest
+  include ActiveJob::TestHelper
+
   setup do
     sign_in_as users(:one)
   end
@@ -14,7 +16,9 @@ class OrdersControllerTest < ActionDispatch::IntegrationTest
         assert_difference("Event.where(name: 'purchase').count", 1) do
           assert_difference("ChannelEventDelivery.count", 1) do
             assert_difference("users(:one).cart_items.count", -1) do
-              post orders_url
+              assert_enqueued_with(job: ChannelEventDeliveryJob) do
+                post orders_url
+              end
             end
           end
         end

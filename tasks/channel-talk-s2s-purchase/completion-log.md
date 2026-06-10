@@ -32,6 +32,41 @@
 
 - 변경 없음
 
+## Phase 3: ChannelTalk S2S Delivery
+
+완료일: 2026-06-10
+커밋: pending
+
+### 완료한 것
+
+- `ChannelTalk::OpenApiClient`를 추가해 채널톡 User 조회와 Event 생성 HTTP 호출을 분리했다.
+- `ChannelTalk::PurchaseEventDelivery` 서비스를 추가해 `memberId -> channel userId` 매핑과 `Purchase` 이벤트 payload 변환을 처리했다.
+- `ChannelEventDeliveryJob`을 추가해 pending delivery를 background job으로 전송하게 했다.
+- delivery의 `pending -> processing -> sent/failed` 상태 전환 메서드를 추가했다.
+- `MAX_ATTEMPTS` 경계를 추가해 같은 delivery가 무제한 전송 시도되지 않게 했다.
+- 주문 생성 트랜잭션이 끝난 뒤 `ChannelEventDeliveryJob`을 enqueue하도록 연결했다.
+- Open API client, delivery service, job, 주문 enqueue 테스트를 추가했다.
+
+### 검증한 것
+
+- `bin/rails test test/services/channel_talk/open_api_client_test.rb test/jobs/channel_event_delivery_job_test.rb test/services/channel_talk/purchase_event_delivery_test.rb test/controllers/orders_controller_test.rb test/models/channel_event_delivery_test.rb`
+- `bin/rails test`
+
+### 회귀 위험
+
+- 실제 채널톡 API 키로 수동 전송 검증은 아직 하지 않았다.
+- `failed` delivery를 운영자가 다시 `pending`으로 돌리는 관리자 화면이나 rake task는 아직 없다.
+- 채널톡 API 응답 구조가 문서와 다르면 `channel_event_id` 저장 지점이 조정될 수 있다.
+
+### 개선사항
+
+- Phase 4에서 README에 필요한 환경변수와 실패 확인 방법을 정리한다.
+- 실제 API 키가 있을 때 한 건을 수동 전송해 채널톡에서 `Purchase` 이벤트가 보이는지 확인한다.
+
+### 다음 phase 계획 변경
+
+- 변경 없음
+
 ## Phase 2: Purchase Event
 
 완료일: 2026-06-10

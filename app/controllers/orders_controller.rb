@@ -7,17 +7,19 @@ class OrdersController < ApplicationController
       return
     end
 
-    order = nil
+    delivery = nil
     ActiveRecord::Base.transaction do
       order = create_order_from_cart(cart_items)
       event = record_purchase_event(order)
-      ChannelEventDelivery.create!(
+      delivery = ChannelEventDelivery.create!(
         event:,
         user: current_user,
         member_id: current_user.member_id
       )
       cart_items.each(&:destroy!)
     end
+
+    ChannelEventDeliveryJob.perform_later(delivery)
 
     redirect_to account_path, notice: "Order placed. Your routine is saved to your order history."
   end
