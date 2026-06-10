@@ -146,7 +146,7 @@
 ## Post-phase Fix: Live Counters
 
 완료일: 2026-06-11
-커밋: pending
+커밋: 5315129
 
 ### 완료한 것
 
