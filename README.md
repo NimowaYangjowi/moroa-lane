@@ -15,6 +15,8 @@ The goal is to look like a realistic DTC skincare shop while staying intentional
 - Seeded order history
 - ChannelTalk tags for non-sensitive customer segmentation
 - ChannelTalk Web SDK boot options
+- ChannelTalk S2S `Purchase` event delivery for server-side order events
+- Delivery status tracking for ChannelTalk Open API calls
 - `/debug/channel` payload inspection page
 
 ## Tech Stack
@@ -26,6 +28,7 @@ The goal is to look like a realistic DTC skincare shop while staying intentional
 - Rails native authentication
 - ERB views
 - ChannelTalk Web SDK
+- ChannelTalk Open API for S2S events
 
 ## Setup
 
@@ -88,6 +91,9 @@ cp .env.example .env
 ```env
 CHANNELTALK_PLUGIN_KEY=your_plugin_key
 CHANNELTALK_MEMBER_HASH_SECRET=your_member_hash_secret
+CHANNELTALK_ACCESS_KEY=your_access_key
+CHANNELTALK_ACCESS_SECRET=your_access_secret
+CHANNELTALK_API_BASE_URL=https://api.channel.io
 ```
 
 Then restart the development server:
@@ -101,10 +107,16 @@ You can still set the values directly in the shell if you prefer:
 ```sh
 export CHANNELTALK_PLUGIN_KEY="your_plugin_key"
 export CHANNELTALK_MEMBER_HASH_SECRET="your_member_hash_secret"
+export CHANNELTALK_ACCESS_KEY="your_access_key"
+export CHANNELTALK_ACCESS_SECRET="your_access_secret"
 bin/dev
 ```
 
 `CHANNELTALK_PLUGIN_KEY` connects the Web SDK to a ChannelTalk channel. `CHANNELTALK_MEMBER_HASH_SECRET` is optional in this local simulator, but the official docs recommend member hash when `memberId` values are predictable.
+
+`CHANNELTALK_ACCESS_KEY` and `CHANNELTALK_ACCESS_SECRET` are used only on the Rails server for ChannelTalk Open API calls. The purchase demo records an internal `purchase` event, creates a delivery record, looks up the ChannelTalk User by `memberId`, and sends a server-side `Purchase` event to `POST /open/v5/users/{userId}/events`.
+
+If these Open API keys are not set, the storefront order still completes. The ChannelTalk delivery job records the failure on `ChannelEventDelivery#last_error` instead of hiding it or blocking the shopper.
 
 ## Demo Flow
 
@@ -115,8 +127,10 @@ bin/dev
 5. Log in with the demo account.
 6. Open a few product pages to create recent browsing context.
 7. Add a product to the cart.
-8. Open `My page` and show member fields, recent views, cart summary, and seeded order history.
-9. Open `Channel Debug` again. The payload now includes `memberId`, profile fields, cart context, and order context.
+8. Open the cart and place the demo order.
+9. Open `My page` and show member fields, recent views, cart summary, and order history.
+10. Open `Channel Debug` again. The payload now includes `memberId`, profile fields, cart context, and order context.
+11. In Rails console or tests, inspect `Event.where(name: "purchase")` and `ChannelEventDelivery.order(:created_at).last` to explain the S2S delivery state.
 
 ## Interview Talking Points
 
@@ -132,6 +146,8 @@ Anonymous, Lead, and Member can be explained from the UI:
 
 The `/debug/channel` page is the developer troubleshooting view. It answers the first integration questions: Which plugin key is being used? Is `memberId` present? Which profile fields are being sent? Is member hash enabled?
 
+Server-side purchase delivery uses a different path from the Web SDK. The app stores the Acme customer key as `memberId`, resolves the ChannelTalk internal `userId`, then sends the `Purchase` event from a background job. This mirrors how a customer backend would send trusted business events such as paid orders without relying on browser-side tracking.
+
 ## Not In Scope
 
 - Real payment processing
@@ -139,7 +155,7 @@ The `/debug/channel` page is the developer troubleshooting view. It answers the 
 - Admin product management
 - Inventory management
 - Coupons, points, or reviews
-- Full Channel Open API implementation
+- Full Channel Open API implementation beyond purchase event delivery
 - Production deployment
 
 ## Tests
@@ -150,4 +166,6 @@ bin/rails test
 
 ## Planning Docs
 
-The phase plan and review log live in `tasks/channel-talk-commerce-simulator`.
+The storefront simulator plan lives in `tasks/channel-talk-commerce-simulator`.
+
+The S2S purchase event plan and phase review log live in `tasks/channel-talk-s2s-purchase`.

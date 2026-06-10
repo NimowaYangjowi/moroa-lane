@@ -32,6 +32,39 @@
 
 - 변경 없음
 
+## Phase 4: Verification And Docs
+
+완료일: 2026-06-10
+커밋: pending
+
+### 완료한 것
+
+- `.env.example`에 채널톡 Open API 서버 인증 환경변수를 추가했다.
+- `README.md`에 S2S `Purchase` 이벤트 delivery 흐름을 추가했다.
+- 데모 흐름에 장바구니 주문 완료와 delivery 상태 확인 단계를 반영했다.
+- 면접 설명 포인트에 Web SDK 이벤트와 서버 측 purchase delivery의 차이를 추가했다.
+- planning docs 위치를 storefront 계획과 S2S purchase 계획으로 나눠 안내했다.
+
+### 검증한 것
+
+- `bin/rails db:migrate db:seed`
+- `bin/rails test`
+- README의 환경변수, 데모 흐름, Not In Scope가 실제 구현과 맞는지 확인했다.
+
+### 회귀 위험
+
+- 실제 채널톡 API 키가 없어 채널톡 대시보드에서 `Purchase` 이벤트가 표시되는지까지는 수동 확인하지 못했다.
+- `/debug/channel`은 SDK boot payload 확인 화면으로 유지했고, S2S delivery 상태 UI는 추가하지 않았다. 현재 delivery 상태 확인은 Rails console 또는 테스트 기준이다.
+
+### 개선사항
+
+- 실제 채널톡 API 키가 준비되면 주문 한 건을 전송해 채널톡 User timeline 또는 이벤트 화면에서 `Purchase`가 보이는지 확인한다.
+- 운영 도구까지 확장한다면 failed delivery를 재시도하는 rake task나 관리자 전용 상태 화면을 추가한다.
+
+### 다음 phase 계획 변경
+
+- 모든 계획 phase 완료
+
 ## Phase 3: ChannelTalk S2S Delivery
 
 완료일: 2026-06-10
