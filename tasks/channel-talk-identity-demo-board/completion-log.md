@@ -65,3 +65,39 @@
 ### 다음 phase 계획 변경
 
 - Phase 2는 `ChannelIdentityDemoSnapshot`의 `identity`, `flow`, `requests`, `payload`, `records` key를 기준으로 구현한다.
+
+## Phase 2: Visual Board
+
+완료일: 2026-06-11
+커밋: pending
+
+### 완료한 것
+
+- `/debug/channel/identity-flow` shell을 면접용 visual board로 교체했다.
+- 상단 identity summary에 Acme user, `memberId`, 채널톡 `userId`, delivery 상태를 표시했다.
+- 중앙에 플로우차트형 stage board를 추가했다.
+- User API request와 S2S Event API request를 별도 request viewer로 표시했다.
+- S2S `Purchase` payload를 JSON block으로 표시했다.
+- `users`, `orders`, `events`, `channel_user_mappings`, `channel_event_deliveries` 최신 레코드를 DB table 형태로 표시했다.
+- `Create demo purchase`, `Run delivery now`, `Refresh` 버튼을 fetch action으로 연결했다.
+- 2초 polling으로 status endpoint를 다시 읽고 화면을 갱신하게 했다.
+- 모바일에서 1열로 접히고 JSON/DB 값이 스크롤되도록 CSS를 추가했다.
+
+### 검증한 것
+
+- `bin/rails test test/controllers/channel_identity_demo_controller_test.rb`
+- `bin/rails test`
+
+### 회귀 위험
+
+- 브라우저에서 실제 클릭과 polling 동작은 Phase 3에서 확인해야 한다.
+- inline JavaScript로 구현했으므로 화면이 커지면 별도 JS 모듈로 분리할 수 있다.
+
+### 개선사항
+
+- Phase 3에서 desktop/mobile 브라우저 화면을 확인하고 겹침이나 가독성 문제가 있으면 조정한다.
+- Phase 3에서 README에 데모 보드 URL과 발표 순서를 추가한다.
+
+### 다음 phase 계획 변경
+
+- 변경 없음

@@ -1,10 +1,215 @@
-<section class="page-hero compact-hero">
-  <p class="eyebrow">Identity Flow</p>
-  <h1>ChannelTalk identity demo board</h1>
-</section>
+<section class="identity-demo-shell" data-controller="identity-demo">
+  <header class="identity-demo-header">
+    <div>
+      <p class="eyebrow">ChannelTalk Identity Flow</p>
+      <h1>memberId to userId to S2S Purchase</h1>
+    </div>
+    <div class="identity-demo-actions">
+      <button class="button" type="button" data-demo-action="purchase">Create demo purchase</button>
+      <button class="button secondary-button" type="button" data-demo-action="deliver">Run delivery now</button>
+      <button class="button secondary-button" type="button" data-demo-action="refresh">Refresh</button>
+    </div>
+  </header>
 
-<section class="section">
-  <div id="identity-demo-board" data-status-url="<%= channel_identity_demo_status_path %>">
-    <pre><code><%= JSON.pretty_generate(ChannelIdentityDemoSnapshot.build(user: current_user)) %></code></pre>
+  <div
+    id="identity-demo-board"
+    class="identity-demo-board"
+    data-status-url="<%= channel_identity_demo_status_path %>"
+    data-purchase-url="<%= channel_identity_demo_purchase_path %>"
+    data-delivery-url="<%= channel_identity_demo_delivery_path %>"
+  >
+    <section class="identity-summary" aria-label="Identity summary">
+      <article>
+        <span>Acme user</span>
+        <strong data-field="acmeUserId">-</strong>
+      </article>
+      <article>
+        <span>memberId</span>
+        <strong data-field="memberId">-</strong>
+      </article>
+      <article>
+        <span>Channel userId</span>
+        <strong data-field="channelUserId">not synced</strong>
+      </article>
+      <article>
+        <span>Delivery</span>
+        <strong class="state-chip" data-field="deliveryStatus">none</strong>
+      </article>
+    </section>
+
+    <section class="identity-board-grid">
+      <div class="identity-flow-board">
+        <div class="identity-section-heading">
+          <p class="eyebrow">Flowchart</p>
+          <small data-field="generatedAt">-</small>
+        </div>
+        <div class="identity-stage-list" data-flow-list></div>
+      </div>
+
+      <div class="identity-inspector">
+        <div class="identity-section-heading">
+          <p class="eyebrow">API requests</p>
+          <span class="state-chip" data-field="mappingStatus">not_created</span>
+        </div>
+        <div class="request-grid">
+          <article>
+            <span>User API</span>
+            <code data-request="userLookup">-</code>
+          </article>
+          <article>
+            <span>S2S Event API</span>
+            <code data-request="eventCreate">-</code>
+          </article>
+        </div>
+        <div class="payload-panel">
+          <div class="identity-section-heading">
+            <p class="eyebrow">S2S payload</p>
+            <span data-field="serverCredentials">credentials</span>
+          </div>
+          <pre><code data-json="payload">null</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="record-board" aria-label="Database records">
+      <div class="identity-section-heading">
+        <p class="eyebrow">Database records</p>
+        <span>actual latest rows</span>
+      </div>
+      <div class="record-grid" data-record-grid></div>
+    </section>
   </div>
 </section>
+
+<script>
+  (function() {
+    var board = document.getElementById("identity-demo-board");
+    if (!board) { return; }
+
+    var csrfToken = document.querySelector("meta[name='csrf-token']") && document.querySelector("meta[name='csrf-token']").content;
+    var actionButtons = Array.prototype.slice.call(document.querySelectorAll("[data-demo-action]"));
+
+    function setText(selector, value) {
+      var element = board.querySelector(selector);
+      if (!element) { return; }
+      element.textContent = value === null || value === undefined || value === "" ? "-" : String(value);
+    }
+
+    function setStateChip(element, value) {
+      if (!element) { return; }
+      element.textContent = value || "none";
+      element.dataset.state = value || "none";
+    }
+
+    function requestLine(request) {
+      if (!request) { return "-"; }
+      return request.method + " " + request.path;
+    }
+
+    function renderFlow(flow) {
+      var list = board.querySelector("[data-flow-list]");
+      list.innerHTML = "";
+      (flow || []).forEach(function(step, index) {
+        var item = document.createElement("article");
+        item.className = "identity-stage";
+        item.innerHTML = "<span></span><strong></strong><small></small>";
+        item.querySelector("span").textContent = String(index + 1).padStart(2, "0");
+        item.querySelector("strong").textContent = step.label;
+        item.querySelector("small").textContent = step.value || "-";
+        list.appendChild(item);
+      });
+    }
+
+    function renderRecords(records) {
+      var grid = board.querySelector("[data-record-grid]");
+      grid.innerHTML = "";
+      Object.keys(records || {}).forEach(function(tableName) {
+        var article = document.createElement("article");
+        article.className = "record-table";
+
+        var title = document.createElement("h2");
+        title.textContent = tableName;
+        article.appendChild(title);
+
+        var record = records[tableName];
+        if (!record) {
+          var empty = document.createElement("p");
+          empty.className = "muted-copy";
+          empty.textContent = "no row";
+          article.appendChild(empty);
+          grid.appendChild(article);
+          return;
+        }
+
+        var table = document.createElement("table");
+        var body = document.createElement("tbody");
+        Object.keys(record).forEach(function(key) {
+          var row = document.createElement("tr");
+          var heading = document.createElement("th");
+          var value = document.createElement("td");
+          heading.scope = "row";
+          heading.textContent = key;
+          value.textContent = typeof record[key] === "object" && record[key] !== null ? JSON.stringify(record[key]) : String(record[key] ?? "-");
+          row.appendChild(heading);
+          row.appendChild(value);
+          body.appendChild(row);
+        });
+        table.appendChild(body);
+        article.appendChild(table);
+        grid.appendChild(article);
+      });
+    }
+
+    function render(data) {
+      setText("[data-field='acmeUserId']", data.identity && data.identity.acmeUserId);
+      setText("[data-field='memberId']", data.identity && data.identity.memberId);
+      setText("[data-field='channelUserId']", data.identity && data.identity.channelUserId || "not synced");
+      setStateChip(board.querySelector("[data-field='deliveryStatus']"), data.identity && data.identity.deliveryStatus);
+      setStateChip(board.querySelector("[data-field='mappingStatus']"), data.identity && data.identity.mappingStatus);
+      setText("[data-field='generatedAt']", data.generatedAt);
+
+      var credentials = data.requests && data.requests.serverCredentials;
+      setText("[data-field='serverCredentials']", credentials ? "key " + credentials.accessKey + " / secret " + credentials.accessSecret : "credentials");
+      setText("[data-request='userLookup']", requestLine(data.requests && data.requests.userLookup));
+      setText("[data-request='eventCreate']", requestLine(data.requests && data.requests.eventCreate));
+
+      board.querySelector("[data-json='payload']").textContent = data.payload ? JSON.stringify(data.payload, null, 2) : "null";
+      renderFlow(data.flow);
+      renderRecords(data.records);
+    }
+
+    function loadStatus() {
+      return fetch(board.dataset.statusUrl, { headers: { accept: "application/json" } })
+        .then(function(response) { return response.json(); })
+        .then(render);
+    }
+
+    function postAction(url) {
+      actionButtons.forEach(function(button) { button.disabled = true; });
+      return fetch(url, {
+        method: "POST",
+        headers: {
+          accept: "application/json",
+          "x-csrf-token": csrfToken
+        }
+      })
+        .then(function(response) { return response.json(); })
+        .then(render)
+        .finally(function() {
+          actionButtons.forEach(function(button) { button.disabled = false; });
+          window.setTimeout(loadStatus, 600);
+        });
+    }
+
+    actionButtons.forEach(function(button) {
+      button.addEventListener("click", function() {
+        if (button.dataset.demoAction === "purchase") { postAction(board.dataset.purchaseUrl); }
+        if (button.dataset.demoAction === "deliver") { postAction(board.dataset.deliveryUrl); }
+        if (button.dataset.demoAction === "refresh") { loadStatus(); }
+      });
+    });
+
+    loadStatus();
+    window.setInterval(loadStatus, 2000);
+  })();
+</script>
