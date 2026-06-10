@@ -5,5 +5,6 @@ class CartsControllerTest < ActionDispatch::IntegrationTest
     sign_in_as users(:one)
     get cart_url
     assert_response :success
+    assert_select "form[action=?]", orders_path
   end
 end

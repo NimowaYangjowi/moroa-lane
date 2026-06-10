@@ -43,6 +43,7 @@
             <dd><%= money(@cart_total_cents) %></dd>
           </div>
         </dl>
+        <%= button_to "Place order", orders_path, method: :post, class: "button panel-action", form: { data: { turbo: false } } %>
         <%= link_to "Continue shopping", products_path, class: "button secondary-button panel-action" %>
       </aside>
     </div>

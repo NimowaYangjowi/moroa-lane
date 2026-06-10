@@ -32,6 +32,40 @@
 
 - 변경 없음
 
+## Phase 2: Purchase Event
+
+완료일: 2026-06-10
+커밋: pending
+
+### 완료한 것
+
+- `OrdersController#create`를 추가해 장바구니 기반 demo purchase 흐름을 만들었다.
+- 장바구니 요약 영역에 사용자가 보는 `Place order` 버튼을 추가했다.
+- 주문 생성, 주문상품 생성, 내부 `purchase` 이벤트 기록, `pending` delivery 생성을 한 트랜잭션으로 묶었다.
+- 구매 완료 후 장바구니 항목을 정리하고 마이페이지로 이동하게 했다.
+- 빈 장바구니에서는 주문과 이벤트가 생성되지 않도록 막았다.
+- 주문 컨트롤러 테스트와 장바구니 화면 테스트를 추가했다.
+
+### 검증한 것
+
+- `bin/rails test test/controllers/orders_controller_test.rb test/controllers/carts_controller_test.rb`
+- `bin/rails test test/controllers/cart_items_controller_test.rb test/models/channel_event_delivery_test.rb`
+- `bin/rails test`
+
+### 회귀 위험
+
+- 이 구매 흐름은 실제 결제 승인이 아니라 면접 데모용 주문 생성이다. 실제 결제 연동이 들어오면 결제 성공 callback 이후에 `purchase`를 기록하도록 경계를 바꿔야 한다.
+- Phase 3 전까지 delivery는 `pending` 상태로만 남고 외부 전송은 일어나지 않는다.
+
+### 개선사항
+
+- Phase 3에서 `pending` delivery를 background job으로 넘기고 채널톡 전송 결과를 상태로 기록한다.
+- Phase 4에서 README에 demo purchase가 실제 결제 연동이 아니라는 점을 명확히 설명한다.
+
+### 다음 phase 계획 변경
+
+- 변경 없음
+
 ## Phase 1: Data Model
 
 완료일: 2026-06-10
