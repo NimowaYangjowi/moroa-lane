@@ -5,7 +5,7 @@
 ## Phase 0: Planning Documents
 
 완료일: 2026-06-11
-커밋: pending
+커밋: d822b78
 
 ### 완료한 것
 
