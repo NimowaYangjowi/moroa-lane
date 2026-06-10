@@ -34,7 +34,7 @@
 ## Phase 1: Data Endpoints
 
 완료일: 2026-06-11
-커밋: pending
+커밋: 13339df
 
 ### 완료한 것
 
