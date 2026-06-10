@@ -101,3 +101,44 @@
 ### 다음 phase 계획 변경
 
 - 변경 없음
+
+## Phase 3: Verification And Docs
+
+완료일: 2026-06-11
+커밋: pending
+
+### 완료한 것
+
+- README에 `/debug/channel/identity-flow` 데모 보드 URL과 발표 순서를 추가했다.
+- README의 interview talking points에 `memberId`, 채널톡 `userId`, User API lookup, S2S Event API request, payload, DB record 설명을 추가했다.
+- `ChannelIdentityDemoController`와 `OrdersController`에서 `PurchaseOrder` 서비스를 전역 상수로 명시해 컨트롤러 네임스페이스 상수 탐색 문제를 줄였다.
+- 새 Rails 서버에서 실제 인증 세션과 CSRF token을 사용해 `status`, `purchase`, `deliver` endpoint를 검증했다.
+
+### 검증한 것
+
+- `bin/rails test test/controllers/channel_identity_demo_controller_test.rb test/controllers/orders_controller_test.rb test/services/purchase_order_test.rb`
+- `bin/rails test`
+- `PIDFILE=tmp/pids/server-3002.pid bin/rails server -p 3002`
+- 인증된 HTTP 검증:
+  - `GET /debug/channel/identity-flow`: `200`
+  - `GET /debug/channel/identity-flow/status`: `200`
+  - `POST /debug/channel/identity-flow/purchase`: `201`
+  - `POST /debug/channel/identity-flow/deliver`: `200`
+  - status payload에서 `memberId`와 `GET /open/v5/users/@{memberId}` 경로 확인
+  - purchase payload에서 `Purchase` 이벤트와 `pending` delivery 확인
+  - delivery run 후 `CHANNELTALK_ACCESS_KEY is required` 실패 원인이 DB record payload에 남는 것 확인
+
+### 회귀 위험
+
+- 이 세션에서 headless browser 도구와 Playwright가 제공되지 않아 desktop/mobile 렌더링 스크린샷 검증은 수행하지 못했다.
+- 실제 ChannelTalk Open API credential이 없으므로 `sent` 상태까지는 검증하지 못했고, missing credential failure 경로를 확인했다.
+- 기존 3001 개발 서버는 `app/services` 디렉터리가 추가되기 전 떠 있던 프로세스라 새 서비스를 autoload하지 못했다. 데모 전에는 Rails 서버를 재시작해야 한다.
+
+### 개선사항
+
+- 발표 전 실제 브라우저에서 `/debug/channel/identity-flow`를 열어 desktop/mobile 폭에서 flowchart와 DB table overflow를 한 번 더 확인한다.
+- 실제 채널톡 Open API key를 넣을 수 있으면 `Run delivery now`가 `sent` 상태로 바뀌는 경로까지 별도로 캡처한다.
+
+### 다음 phase 계획 변경
+
+- 남은 phase 없음

@@ -7,7 +7,7 @@ class OrdersController < ApplicationController
       return
     end
 
-    PurchaseOrder.call(user: current_user, cart_items:)
+    ::PurchaseOrder.call(user: current_user, cart_items:)
 
     redirect_to account_path, notice: "Order placed. Your routine is saved to your order history."
   end

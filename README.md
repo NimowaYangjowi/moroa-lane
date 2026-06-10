@@ -18,6 +18,7 @@ The goal is to look like a realistic DTC skincare shop while staying intentional
 - ChannelTalk S2S `Purchase` event delivery for server-side order events
 - Delivery status tracking for ChannelTalk Open API calls
 - `/debug/channel` payload inspection page
+- `/debug/channel/identity-flow` visual board for `memberId`, `userId`, API payloads, and DB records
 
 ## Tech Stack
 
@@ -130,7 +131,9 @@ If these Open API keys are not set, the storefront order still completes. The Ch
 8. Open the cart and place the demo order.
 9. Open `My page` and show member fields, recent views, cart summary, and order history.
 10. Open `Channel Debug` again. The payload now includes `memberId`, profile fields, cart context, and order context.
-11. In Rails console or tests, inspect `Event.where(name: "purchase")` and `ChannelEventDelivery.order(:created_at).last` to explain the S2S delivery state.
+11. Open `Identity Flow` at `/debug/channel/identity-flow`.
+12. Click `Create demo purchase`, then `Run delivery now`.
+13. Show the flowchart, User API request, S2S payload, DB records, and delivery state updating on the page.
 
 ## Interview Talking Points
 
@@ -145,6 +148,8 @@ Anonymous, Lead, and Member can be explained from the UI:
 - Member: a logged-in shop user with a stable `memberId` and profile fields.
 
 The `/debug/channel` page is the developer troubleshooting view. It answers the first integration questions: Which plugin key is being used? Is `memberId` present? Which profile fields are being sent? Is member hash enabled?
+
+The `/debug/channel/identity-flow` board is the interview walkthrough view. It shows Acme's `memberId`, ChannelTalk's `userId`, the `GET /open/v5/users/@{memberId}` lookup, the `POST /open/v5/users/{userId}/events` request, the actual S2S payload, and the latest DB rows used for the mapping.
 
 Server-side purchase delivery uses a different path from the Web SDK. The app stores the Acme customer key as `memberId`, resolves the ChannelTalk internal `userId`, then sends the `Purchase` event from a background job. This mirrors how a customer backend would send trusted business events such as paid orders without relying on browser-side tracking.
 
@@ -169,3 +174,5 @@ bin/rails test
 The storefront simulator plan lives in `tasks/channel-talk-commerce-simulator`.
 
 The S2S purchase event plan and phase review log live in `tasks/channel-talk-s2s-purchase`.
+
+The visual identity demo board plan and phase review log live in `tasks/channel-talk-identity-demo-board`.

@@ -9,7 +9,7 @@ class ChannelIdentityDemoController < ApplicationController
   def create_purchase
     ensure_demo_cart_item
     cart_items = current_user.cart_items.includes(:product).order(:created_at).to_a
-    PurchaseOrder.call(user: current_user, cart_items:, enqueue_delivery: false)
+    ::PurchaseOrder.call(user: current_user, cart_items:, enqueue_delivery: false)
 
     render json: ChannelIdentityDemoSnapshot.build(user: current_user), status: :created
   end
