@@ -13,4 +13,16 @@ class EventTest < ActiveSupport::TestCase
     assert_not event.valid?
     assert_includes event.errors[:name], "is not included in the list"
   end
+
+  test "allows purchase events for order subjects" do
+    event = Event.new(
+      name: "purchase",
+      user: users(:one),
+      subject: orders(:one),
+      properties: { order_id: orders(:one).id },
+      occurred_at: Time.current
+    )
+
+    assert event.valid?
+  end
 end

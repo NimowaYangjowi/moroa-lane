@@ -4,6 +4,8 @@ class User < ApplicationRecord
   has_secure_password
   has_many :sessions, dependent: :destroy
   has_many :events, dependent: :nullify
+  has_one :channel_user_mapping, dependent: :destroy
+  has_many :channel_event_deliveries, dependent: :destroy
   has_many :product_views, dependent: :destroy
   has_many :viewed_products, through: :product_views, source: :product
   has_many :cart_items, dependent: :destroy

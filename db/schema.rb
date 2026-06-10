@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_10_164500) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_10_170100) do
   create_table "cart_items", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "product_id", null: false
@@ -20,6 +20,39 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_10_164500) do
     t.index ["product_id"], name: "index_cart_items_on_product_id"
     t.index ["user_id", "product_id"], name: "index_cart_items_on_user_id_and_product_id", unique: true
     t.index ["user_id"], name: "index_cart_items_on_user_id"
+  end
+
+  create_table "channel_event_deliveries", force: :cascade do |t|
+    t.integer "attempts", default: 0, null: false
+    t.string "channel_event_id"
+    t.string "channel_user_id"
+    t.integer "channel_user_mapping_id"
+    t.datetime "created_at", null: false
+    t.integer "event_id", null: false
+    t.text "last_error"
+    t.string "member_id", null: false
+    t.datetime "sent_at"
+    t.string "status", default: "pending", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["channel_event_id"], name: "index_channel_event_deliveries_on_channel_event_id", unique: true, where: "channel_event_id IS NOT NULL"
+    t.index ["channel_user_mapping_id"], name: "index_channel_event_deliveries_on_channel_user_mapping_id"
+    t.index ["event_id"], name: "index_channel_event_deliveries_on_event_id", unique: true
+    t.index ["status", "created_at"], name: "index_channel_event_deliveries_on_status_and_created_at"
+    t.index ["user_id"], name: "index_channel_event_deliveries_on_user_id"
+  end
+
+  create_table "channel_user_mappings", force: :cascade do |t|
+    t.string "channel_user_id"
+    t.datetime "created_at", null: false
+    t.text "last_error"
+    t.string "member_id", null: false
+    t.datetime "synced_at"
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["channel_user_id"], name: "index_channel_user_mappings_on_channel_user_id", unique: true, where: "channel_user_id IS NOT NULL"
+    t.index ["member_id"], name: "index_channel_user_mappings_on_member_id", unique: true
+    t.index ["user_id"], name: "index_channel_user_mappings_on_user_id", unique: true
   end
 
   create_table "events", force: :cascade do |t|
@@ -248,6 +281,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_10_164500) do
 
   add_foreign_key "cart_items", "products"
   add_foreign_key "cart_items", "users"
+  add_foreign_key "channel_event_deliveries", "channel_user_mappings"
+  add_foreign_key "channel_event_deliveries", "events"
+  add_foreign_key "channel_event_deliveries", "users"
+  add_foreign_key "channel_user_mappings", "users"
   add_foreign_key "events", "users"
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "products"
