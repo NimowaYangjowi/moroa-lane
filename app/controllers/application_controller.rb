@@ -24,4 +24,14 @@ class ApplicationController < ActionController::Base
   def channel_sdk_enabled?
     ENV["CHANNELTALK_PLUGIN_KEY"].present?
   end
+
+  def record_event(name, user: current_user, subject: nil, properties:)
+    Event.create!(
+      name:,
+      user:,
+      subject:,
+      properties:,
+      occurred_at: Time.current
+    )
+  end
 end

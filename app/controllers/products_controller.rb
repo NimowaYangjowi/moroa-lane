@@ -21,6 +21,16 @@ class ProductsController < ApplicationController
   end
 
   def record_product_view(product)
+    record_event(
+      "content_view",
+      subject: product,
+      properties: {
+        product_id: product.id,
+        product_slug: product.slug,
+        product_name: product.name
+      }
+    )
+
     return unless current_user
 
     current_user.product_views.create!(product:, viewed_at: Time.current)

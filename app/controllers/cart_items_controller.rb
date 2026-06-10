@@ -5,6 +5,18 @@ class CartItemsController < ApplicationController
     existing_item = cart_item.persisted?
     cart_item.quantity = quantity_param
     cart_item.save!
+    record_event(
+      "add_to_cart",
+      subject: product,
+      properties: {
+        product_id: product.id,
+        product_slug: product.slug,
+        product_name: product.name,
+        cart_item_id: cart_item.id,
+        quantity: cart_item.quantity,
+        existing_cart_item: existing_item
+      }
+    )
 
     message = existing_item ? "#{product.name} was updated in your cart." : "#{product.name} was added to your cart."
     redirect_to cart_path, notice: message

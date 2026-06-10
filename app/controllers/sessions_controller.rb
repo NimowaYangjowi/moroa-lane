@@ -9,6 +9,7 @@ class SessionsController < ApplicationController
     if user = User.authenticate_by(email_address: login_email, password: login_password)
       cookies.delete(:channel_member_logged_out)
       start_new_session_for user
+      record_event("login", user:, properties: { session_id: Current.session.id })
       redirect_to after_authentication_url
     else
       redirect_to new_session_path, alert: "Try another email address or password."

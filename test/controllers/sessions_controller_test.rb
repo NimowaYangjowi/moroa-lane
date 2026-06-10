@@ -15,15 +15,24 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
   test "create with valid credentials" do
     cookies[:channel_member_logged_out] = "1"
 
-    post session_path, params: { email_address: @user.email_address, password: "password" }
+    assert_difference("Event.where(name: 'login').count", 1) do
+      post session_path, params: { email_address: @user.email_address, password: "password" }
+    end
 
     assert_redirected_to root_path
     assert cookies[:session_id]
     assert_empty cookies[:channel_member_logged_out]
+
+    event = Event.order(:created_at).last
+    assert_equal @user, event.user
+    assert_equal "login", event.name
+    assert event.properties.fetch("session_id")
   end
 
   test "create with invalid credentials" do
-    post session_path, params: { email_address: @user.email_address, password: "wrong" }
+    assert_no_difference("Event.count") do
+      post session_path, params: { email_address: @user.email_address, password: "wrong" }
+    end
 
     assert_redirected_to new_session_path
     assert_nil cookies[:session_id]

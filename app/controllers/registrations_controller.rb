@@ -10,6 +10,7 @@ class RegistrationsController < ApplicationController
 
     if @user.save
       start_new_session_for(@user)
+      record_event("registration", user: @user, properties: { session_id: Current.session.id })
       redirect_to account_path, notice: "Welcome to Acme Corp."
     else
       render :new, status: :unprocessable_entity
