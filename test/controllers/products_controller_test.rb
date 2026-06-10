@@ -19,4 +19,18 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
     assert_equal products(:one), event.subject
     assert_equal products(:one).slug, event.properties.fetch("product_slug")
   end
+
+  test "queues content view event for ChannelTalk tracking" do
+    previous_plugin_key = ENV["CHANNELTALK_PLUGIN_KEY"]
+    ENV["CHANNELTALK_PLUGIN_KEY"] = "plugin-key"
+
+    get product_url(products(:one))
+
+    assert_response :success
+    assert_includes response.body, "channelPendingEvents"
+    assert_includes response.body, '"name":"content_view"'
+    assert_includes response.body, products(:one).slug
+  ensure
+    ENV["CHANNELTALK_PLUGIN_KEY"] = previous_plugin_key
+  end
 end

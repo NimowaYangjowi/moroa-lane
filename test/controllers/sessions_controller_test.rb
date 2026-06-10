@@ -29,6 +29,21 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert event.properties.fetch("session_id")
   end
 
+  test "queues login event for ChannelTalk tracking after redirect" do
+    previous_plugin_key = ENV["CHANNELTALK_PLUGIN_KEY"]
+    ENV["CHANNELTALK_PLUGIN_KEY"] = "plugin-key"
+
+    post session_path, params: { email_address: @user.email_address, password: "password" }
+    follow_redirect!
+
+    assert_response :success
+    assert_includes response.body, "channelPendingEvents"
+    assert_includes response.body, '"name":"login"'
+    assert_no_match(/session_id/, response.body)
+  ensure
+    ENV["CHANNELTALK_PLUGIN_KEY"] = previous_plugin_key
+  end
+
   test "create with invalid credentials" do
     assert_no_difference("Event.count") do
       post session_path, params: { email_address: @user.email_address, password: "wrong" }
