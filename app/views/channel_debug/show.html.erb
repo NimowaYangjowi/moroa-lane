@@ -1,42 +1,79 @@
 <section class="page-hero compact-hero">
-  <p class="eyebrow">Customer care</p>
-  <h1>How can we help?</h1>
+  <p class="eyebrow">Channel Debug</p>
+  <h1>ChannelTalk payload</h1>
   <p>
-    Ask about your routine, compare products, or get help with a recent order.
+    Check the customer identity and context this shop sends when the ChannelTalk SDK boots.
   </p>
 </section>
 
-<section class="section dashboard-grid">
+<section class="section debug-layout">
   <div class="profile-panel">
-    <p class="eyebrow">Product guidance</p>
-    <h2>Find the right fit.</h2>
-    <p class="muted-copy">
-      Tell us your skin type, current routine, and what you want to improve. We will help narrow
-      the options.
-    </p>
+    <p class="eyebrow">SDK status</p>
+    <h2><%= @sdk_enabled ? "Live SDK boot" : "Local fallback" %></h2>
+    <dl class="definition-list">
+      <div>
+        <dt>Plugin key</dt>
+        <dd><%= @boot_options[:pluginKey] %></dd>
+      </div>
+      <div>
+        <dt>SDK script</dt>
+        <dd><%= @sdk_enabled ? "Enabled" : "Not loaded" %></dd>
+      </div>
+      <div>
+        <dt>Language</dt>
+        <dd><%= @boot_options[:language] %></dd>
+      </div>
+    </dl>
   </div>
 
   <div class="profile-panel">
-    <p class="eyebrow">Account help</p>
+    <p class="eyebrow">Customer identity</p>
     <% if current_user %>
-      <h2>We have your details.</h2>
-      <p class="muted-copy">
-        You are signed in, so we can help with your cart, recent product views, and past orders.
-      </p>
+      <h2>Member payload</h2>
+      <dl class="definition-list">
+        <div>
+          <dt>memberId</dt>
+          <dd><%= @boot_options[:memberId] %></dd>
+        </div>
+        <div>
+          <dt>memberHash</dt>
+          <dd><%= @boot_options[:memberHash].present? ? "Present" : "Not configured" %></dd>
+        </div>
+        <div>
+          <dt>Profile fields</dt>
+          <dd><%= @boot_options.fetch(:profile, {}).keys.join(", ") %></dd>
+        </div>
+      </dl>
     <% else %>
-      <h2>Shopping as a guest.</h2>
+      <h2>Anonymous payload</h2>
       <p class="muted-copy">
-        Sign in if you want us to look up your saved cart or order history.
+        The SDK boots without a memberId, so ChannelTalk treats this browser as an anonymous visitor.
       </p>
     <% end %>
   </div>
 
   <div class="profile-panel">
-    <p class="eyebrow">Shopping help</p>
-    <h2>Continue where you left off.</h2>
-    <p class="muted-copy">
-      We can help compare items in your cart, check product details, or suggest what to add next.
-    </p>
-    <%= link_to "Browse products", products_path, class: "button secondary-button panel-action" %>
+    <p class="eyebrow">Tags</p>
+    <h2>Segment context</h2>
+    <% if @boot_options[:tags].present? %>
+      <div class="tag-list">
+        <% @boot_options[:tags].each do |tag| %>
+          <div class="debug-tag">
+            <strong><%= tag %></strong>
+            <small>Sent as a ChannelTalk customer tag</small>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="muted-copy">No customer tags are sent for this visitor yet.</p>
+    <% end %>
+  </div>
+
+  <div class="debug-panel">
+    <div class="debug-panel-header">
+      <p class="eyebrow">Boot options</p>
+      <%= link_to "Sign in to compare", new_session_path, class: "button secondary-button" unless current_user %>
+    </div>
+    <pre><code><%= JSON.pretty_generate(@boot_options) %></code></pre>
   </div>
 </section>

@@ -650,6 +650,22 @@ a {
   overflow: hidden;
 }
 
+.tag-list {
+  display: grid;
+  gap: 10px;
+}
+
+.debug-tag {
+  border-top: 1px solid #eee5dc;
+  display: grid;
+  gap: 6px;
+  padding-top: 12px;
+}
+
+.debug-tag small {
+  color: #7a7066;
+}
+
 .debug-panel-header {
   align-items: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.14);
