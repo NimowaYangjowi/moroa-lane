@@ -30,3 +30,38 @@
 ### 다음 phase 계획 변경
 
 - 변경 없음
+
+## Phase 1: Data Endpoints
+
+완료일: 2026-06-11
+커밋: pending
+
+### 완료한 것
+
+- `PurchaseOrder` 서비스를 추가해 일반 주문 흐름과 데모 구매 흐름이 같은 주문 생성 로직을 쓰게 했다.
+- `ChannelIdentityDemoSnapshot`을 추가해 identity, User API request, S2S Event API request, payload, DB record를 JSON으로 만들었다.
+- `/debug/channel/identity-flow` shell page를 추가했다.
+- `/debug/channel/identity-flow/status` JSON endpoint를 추가했다.
+- `/debug/channel/identity-flow/purchase` demo purchase action을 추가했다.
+- `/debug/channel/identity-flow/deliver` delivery run action을 추가했다.
+- presenter, controller, purchase service 테스트를 추가했다.
+- 실제 endpoint 이름과 snapshot key를 Phase 2 문서에 반영했다.
+
+### 검증한 것
+
+- `bin/rails test test/controllers/channel_identity_demo_controller_test.rb test/services/purchase_order_test.rb test/models/channel_identity_demo_snapshot_test.rb test/controllers/orders_controller_test.rb`
+- `bin/rails test`
+
+### 회귀 위험
+
+- demo purchase action은 장바구니가 비어 있으면 대표 상품을 자동으로 담는다. 면접 데모 편의 기능이므로 실제 commerce checkout로 오해되지 않게 Phase 2 화면에서 액션 라벨을 명확히 해야 한다.
+- delivery run action은 failed delivery를 attempts 상한 전까지만 pending으로 되돌린다. 상한 이후에는 실패 상태를 그대로 보여준다.
+
+### 개선사항
+
+- Phase 2에서 JSON shell을 실제 플로우차트, payload viewer, DB record board로 교체한다.
+- Phase 2에서 자동 polling 간격을 짧게 잡되 과도한 요청이 되지 않게 2초 이상으로 둔다.
+
+### 다음 phase 계획 변경
+
+- Phase 2는 `ChannelIdentityDemoSnapshot`의 `identity`, `flow`, `requests`, `payload`, `records` key를 기준으로 구현한다.

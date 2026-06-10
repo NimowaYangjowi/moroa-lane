@@ -1,0 +1,10 @@
+<section class="page-hero compact-hero">
+  <p class="eyebrow">Identity Flow</p>
+  <h1>ChannelTalk identity demo board</h1>
+</section>
+
+<section class="section">
+  <div id="identity-demo-board" data-status-url="<%= channel_identity_demo_status_path %>">
+    <pre><code><%= JSON.pretty_generate(ChannelIdentityDemoSnapshot.build(user: current_user)) %></code></pre>
+  </div>
+</section>

@@ -4,6 +4,10 @@ Rails.application.routes.draw do
   resources :orders, only: :create
   resource :account, only: :show, controller: :account
   resource :channel_debug, only: :show, path: "debug/channel", controller: :channel_debug
+  get "debug/channel/identity-flow", to: "channel_identity_demo#show", as: :channel_identity_demo
+  get "debug/channel/identity-flow/status", to: "channel_identity_demo#status", as: :channel_identity_demo_status
+  post "debug/channel/identity-flow/purchase", to: "channel_identity_demo#create_purchase", as: :channel_identity_demo_purchase
+  post "debug/channel/identity-flow/deliver", to: "channel_identity_demo#run_delivery", as: :channel_identity_demo_delivery
   resource :registration, only: %i[new create]
   resource :session
   resources :passwords, param: :token

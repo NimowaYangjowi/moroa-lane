@@ -20,6 +20,9 @@
 ## 구현 범위
 
 - `/debug/channel/identity-flow` page
+- `GET /debug/channel/identity-flow/status` polling
+- `POST /debug/channel/identity-flow/purchase` demo purchase action
+- `POST /debug/channel/identity-flow/deliver` delivery run action
 - 상단 identity summary
 - 플로우차트형 stage board
 - User API request viewer
@@ -27,6 +30,7 @@
 - 실제 DB record table
 - `Create demo purchase`, `Run delivery now`, `Refresh` 버튼
 - JavaScript polling으로 상태 자동 갱신
+- `ChannelIdentityDemoSnapshot` response key 기준으로 DOM 업데이트
 - 반응형 CSS
 
 ## UI 원칙
