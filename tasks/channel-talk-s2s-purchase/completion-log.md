@@ -35,7 +35,7 @@
 ## Phase 2: Purchase Event
 
 완료일: 2026-06-10
-커밋: pending
+커밋: 6b0a7e9
 
 ### 완료한 것
 
