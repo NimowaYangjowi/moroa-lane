@@ -142,3 +142,43 @@
 ### 다음 phase 계획 변경
 
 - 남은 phase 없음
+
+## Post-phase Fix: Live Counters
+
+완료일: 2026-06-11
+커밋: pending
+
+### 완료한 것
+
+- `Create demo purchase` 클릭 결과가 화면에서 바로 보이도록 `Purchase events`, `Orders`, `Deliveries` 실시간 카운터를 추가했다.
+- snapshot JSON에 `metrics.purchaseEvents`, `metrics.orders`, `metrics.deliveries`를 추가했다.
+- 카운터가 실제 사용자 기준 DB count와 맞고, purchase action 후 1씩 증가하는 테스트를 추가했다.
+
+### 검증한 것
+
+- `bin/rails test test/models/channel_identity_demo_snapshot_test.rb test/controllers/channel_identity_demo_controller_test.rb`
+- `bin/rails test`
+- 인증된 HTTP 검증:
+  - purchase 전 `purchaseEvents=1`, `orders=2`, `deliveries=1`
+  - purchase 후 `purchaseEvents=2`, `orders=3`, `deliveries=2`
+- `browse` 검증:
+  - 로그인, 로그아웃, 회원가입
+  - 상품 목록, 상품 상세, 장바구니 추가
+  - 장바구니 수량 변경과 제거
+  - 주문 생성 후 마이페이지 이동
+  - `/debug/channel` payload 표시
+  - `/debug/channel/identity-flow` 카운터 증가, `Purchase` payload 표시, delivery 실패 원인 표시
+  - `Guide`, `About` nav 링크
+  - desktop/mobile screenshot 및 모바일 가로 overflow 없음
+
+### 회귀 위험
+
+- status polling마다 count query 3개가 추가된다. 이 화면은 면접용 debug board라 비용 영향은 작지만, 운영 대시보드로 확장한다면 집계 캐시나 페이지네이션 기준으로 다시 설계해야 한다.
+
+### 개선사항
+
+- 실제 발표 전에는 채널톡 credential을 넣은 상태에서 `sent` delivery 경로까지 한 번 더 확인한다.
+
+### 다음 phase 계획 변경
+
+- 남은 phase 없음

@@ -15,6 +15,7 @@ class ChannelIdentityDemoControllerTest < ActionDispatch::IntegrationTest
     assert_select "[data-status-url=?]", channel_identity_demo_status_path
     assert_select "[data-flow-list]"
     assert_select "[data-record-grid]"
+    assert_select "[data-metric='purchaseEvents']"
   end
 
   test "returns identity status payload" do
@@ -27,11 +28,15 @@ class ChannelIdentityDemoControllerTest < ActionDispatch::IntegrationTest
     assert_equal "GET", payload.dig("requests", "userLookup", "method")
     assert_equal "POST", payload.dig("requests", "eventCreate", "method")
     assert_equal "missing", payload.dig("requests", "serverCredentials", "accessKey")
+    assert_equal Event.where(user: users(:one), name: "purchase").count, payload.dig("metrics", "purchaseEvents")
     assert payload.key?("records")
   end
 
   test "creates demo purchase without sending delivery" do
     users(:one).cart_items.destroy_all
+    purchase_events_count = Event.where(user: users(:one), name: "purchase").count
+    orders_count = users(:one).orders.count
+    deliveries_count = users(:one).channel_event_deliveries.count
 
     assert_difference("Order.count", 1) do
       assert_difference("Event.where(name: 'purchase').count", 1) do
@@ -45,6 +50,9 @@ class ChannelIdentityDemoControllerTest < ActionDispatch::IntegrationTest
     payload = JSON.parse(response.body)
 
     assert_equal "pending", payload.dig("identity", "deliveryStatus")
+    assert_equal purchase_events_count + 1, payload.dig("metrics", "purchaseEvents")
+    assert_equal orders_count + 1, payload.dig("metrics", "orders")
+    assert_equal deliveries_count + 1, payload.dig("metrics", "deliveries")
     assert_equal "Purchase", payload.dig("payload", "name")
     assert_equal "purchase", payload.dig("records", "events", "name")
     assert_equal "pending", payload.dig("records", "channel_event_deliveries", "status")

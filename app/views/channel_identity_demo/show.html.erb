@@ -37,6 +37,21 @@
       </article>
     </section>
 
+    <section class="identity-counters" aria-label="Live record counters">
+      <article>
+        <span>Purchase events</span>
+        <strong data-metric="purchaseEvents">0</strong>
+      </article>
+      <article>
+        <span>Orders</span>
+        <strong data-metric="orders">0</strong>
+      </article>
+      <article>
+        <span>Deliveries</span>
+        <strong data-metric="deliveries">0</strong>
+      </article>
+    </section>
+
     <section class="identity-board-grid">
       <div class="identity-flow-board">
         <div class="identity-section-heading">
@@ -172,6 +187,9 @@
       setText("[data-field='serverCredentials']", credentials ? "key " + credentials.accessKey + " / secret " + credentials.accessSecret : "credentials");
       setText("[data-request='userLookup']", requestLine(data.requests && data.requests.userLookup));
       setText("[data-request='eventCreate']", requestLine(data.requests && data.requests.eventCreate));
+      setText("[data-metric='purchaseEvents']", data.metrics && data.metrics.purchaseEvents);
+      setText("[data-metric='orders']", data.metrics && data.metrics.orders);
+      setText("[data-metric='deliveries']", data.metrics && data.metrics.deliveries);
 
       board.querySelector("[data-json='payload']").textContent = data.payload ? JSON.stringify(data.payload, null, 2) : "null";
       renderFlow(data.flow);

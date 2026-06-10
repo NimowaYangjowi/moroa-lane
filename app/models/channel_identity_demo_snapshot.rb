@@ -11,6 +11,7 @@ class ChannelIdentityDemoSnapshot
     {
       generatedAt: Time.current.iso8601,
       identity: identity,
+      metrics: metrics,
       flow: flow,
       requests: requests,
       payload: s2s_payload,
@@ -30,6 +31,14 @@ class ChannelIdentityDemoSnapshot
       channelUserId: mapping&.channel_user_id,
       mappingStatus: mapping_status,
       deliveryStatus: latest_delivery&.status || "none"
+    }
+  end
+
+  def metrics
+    {
+      purchaseEvents: purchase_events_scope.count,
+      orders: user.orders.count,
+      deliveries: user.channel_event_deliveries.count
     }
   end
 
@@ -123,10 +132,14 @@ class ChannelIdentityDemoSnapshot
   end
 
   def latest_event
-    @latest_event ||= user.events.where(name: "purchase").order(created_at: :desc).first
+    @latest_event ||= purchase_events_scope.order(created_at: :desc).first
   end
 
   def latest_delivery
     @latest_delivery ||= user.channel_event_deliveries.order(created_at: :desc).first
+  end
+
+  def purchase_events_scope
+    user.events.where(name: "purchase")
   end
 end

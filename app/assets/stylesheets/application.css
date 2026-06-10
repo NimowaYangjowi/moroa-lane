@@ -934,7 +934,8 @@ a {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-.identity-summary article {
+.identity-summary article,
+.identity-counters article {
   background: #fff;
   border: 1px solid #e6ddd2;
   display: grid;
@@ -944,6 +945,7 @@ a {
 }
 
 .identity-summary span,
+.identity-counters span,
 .request-grid span,
 .identity-stage span,
 .identity-section-heading span {
@@ -957,6 +959,22 @@ a {
   font-size: 18px;
   line-height: 1.25;
   overflow-wrap: anywhere;
+}
+
+.identity-counters {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.identity-counters article {
+  min-height: 96px;
+}
+
+.identity-counters strong {
+  color: #1d1b18;
+  font-size: 34px;
+  line-height: 1;
 }
 
 .identity-board-grid {
@@ -1210,6 +1228,7 @@ a {
   .guide-shot-block.alternate,
   .guide-data-map,
   .identity-summary,
+  .identity-counters,
   .identity-board-grid,
   .identity-stage-list,
   .record-grid,
