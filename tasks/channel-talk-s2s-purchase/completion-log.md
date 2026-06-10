@@ -35,7 +35,7 @@
 ## Phase 3: ChannelTalk S2S Delivery
 
 완료일: 2026-06-10
-커밋: pending
+커밋: 66fc4df
 
 ### 완료한 것
 
