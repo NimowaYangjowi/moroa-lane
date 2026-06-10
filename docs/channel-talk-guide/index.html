@@ -1,5 +1,41 @@
-<% content_for :title, "ChannelTalk Enterprise Guide | Acme Corp" %>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>ChannelTalk Enterprise Guide | Acme Corp</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Acme Corp">
+    <meta name="mobile-web-app-capable" content="yes">
+        
 
+    
+
+
+    <link rel="icon" href="/acme-corp/icon.png" type="image/png">
+    <link rel="icon" href="/acme-corp/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/acme-corp/icon.png">
+
+    <link rel="stylesheet" href="/acme-corp/assets/application.css" data-turbo-track="reload" />
+    
+
+  </head>
+
+  <body>
+    <header class="site-header">
+      <a class="brand-link" href="/acme-corp/">Acme Corp</a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="/acme-corp/products/">Shop</a>
+        <a href="/acme-corp/channel-talk-guide/">Guide</a>
+        <a href="/acme-corp/#scope">About</a>
+          <a href="/acme-corp/session/new/">Log in</a>
+          <a href="/acme-corp/registration/new/">Join</a>
+      </nav>
+    </header>
+
+    <main>
+
+      
 <article class="guide-article">
   <section class="guide-hero">
     <p class="eyebrow">Enterprise adoption note</p>
@@ -34,7 +70,7 @@
 
   <section class="guide-shot-block">
     <figure>
-      <%= image_tag "channel_guide/01-anonymous-home.png", alt: "Acme Corp home page before the visitor logs in", loading: "lazy", decoding: "async" %>
+      <img alt="Acme Corp home page before the visitor logs in" loading="lazy" decoding="async" src="/acme-corp/assets/channel_guide/01-anonymous-home.png" />
       <figcaption>처음 방문한 고객은 아직 이름표가 없습니다.</figcaption>
     </figure>
     <div class="guide-copy">
@@ -48,7 +84,7 @@
 
   <section class="guide-shot-block alternate">
     <figure>
-      <%= image_tag "channel_guide/02-product-context.png", alt: "Product detail page where a shopper can ask support for help choosing a serum", loading: "lazy", decoding: "async" %>
+      <img alt="Product detail page where a shopper can ask support for help choosing a serum" loading="lazy" decoding="async" src="/acme-corp/assets/channel_guide/02-product-context.png" />
       <figcaption>상품 상세 화면은 상담이 시작되기 가장 자연스러운 지점입니다.</figcaption>
     </figure>
     <div class="guide-copy">
@@ -62,7 +98,7 @@
 
   <section class="guide-shot-block">
     <figure>
-      <%= image_tag "channel_guide/03-member-profile.png", alt: "Signed-in customer profile page with name, email, recent products, cart, and order history", loading: "lazy", decoding: "async" %>
+      <img alt="Signed-in customer profile page with name, email, recent products, cart, and order history" loading="lazy" decoding="async" src="/acme-corp/assets/channel_guide/03-member-profile.png" />
       <figcaption>로그인 후에는 쇼핑몰 회원 정보가 상담용 고객 정보가 됩니다.</figcaption>
     </figure>
     <div class="guide-copy">
@@ -103,7 +139,7 @@
 
   <section class="guide-shot-block alternate">
     <figure>
-      <%= image_tag "channel_guide/04-channel-payload.png", alt: "ChannelTalk dashboard showing the inbox, closed chat filter, and customer conversation history", loading: "lazy", decoding: "async" %>
+      <img alt="ChannelTalk dashboard showing the inbox, closed chat filter, and customer conversation history" loading="lazy" decoding="async" src="/acme-corp/assets/channel_guide/04-channel-payload.png" />
       <figcaption>채널톡 대시보드에서는 상담 목록과 대화 기록이 함께 보입니다.</figcaption>
     </figure>
     <div class="guide-copy">
@@ -254,3 +290,44 @@
     </div>
   </section>
 </article>
+
+    </main>
+
+      <script>
+        (function(){var w=window;if(w.ChannelIO){return w.console.error("ChannelIO script included twice.");}var ch=function(){ch.c(arguments);};ch.q=[];ch.c=function(args){ch.q.push(args);};w.ChannelIO=ch;function l(){if(w.ChannelIOInitialized){return;}w.ChannelIOInitialized=true;var s=document.createElement("script");s.type="text/javascript";s.async=true;s.src="https://cdn.channel.io/plugin/ch-plugin-web.js";var x=document.getElementsByTagName("script")[0];if(x.parentNode){x.parentNode.insertBefore(s,x);}}if(document.readyState==="complete"){l();}else{w.addEventListener("DOMContentLoaded",l);w.addEventListener("load",l);}})();
+        var channelBootOptions = {"pluginKey":"09dd96fd-3ff2-4476-a37f-916102b26183","language":"en"};
+
+        function clearChannelTalkBrowserState() {
+          try {
+            Object.keys(window.localStorage || {}).forEach(function(key) {
+              if (key.indexOf("Channel.") === 0) { window.localStorage.removeItem(key); }
+            });
+            Object.keys(window.sessionStorage || {}).forEach(function(key) {
+              if (key.indexOf("Channel.") === 0) { window.sessionStorage.removeItem(key); }
+            });
+            document.cookie = "_channeltalk_session=; Max-Age=0; path=/; SameSite=Lax";
+          } catch (error) {
+            console.warn("ChannelTalk browser state cleanup failed", error);
+          }
+        }
+
+        function bootChannelTalk() {
+          ChannelIO("boot", channelBootOptions, function(error) {
+            if (error) { console.error("ChannelTalk boot failed", error); }
+          });
+        }
+
+        bootChannelTalk();
+
+        document.addEventListener("submit", function(event) {
+          var form = event.target;
+          if (!form.matches("[data-channel-logout-form]")) { return; }
+
+          if (window.ChannelIO) {
+            clearChannelTalkBrowserState();
+            ChannelIO("shutdown");
+          }
+        }, true);
+      </script>
+  </body>
+</html>

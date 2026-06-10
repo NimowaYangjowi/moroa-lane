@@ -1,6 +1,6 @@
-# Moroa Lane
+# Acme Corp
 
-Moroa Lane is a Rails + SQLite commerce demo for a realistic skincare shop.
+Acme Corp is a Rails commerce demo for a realistic skincare shop. It uses SQLite locally and PostgreSQL on Railway.
 
 The goal is to look like a realistic DTC skincare shop while staying intentionally small. The app is not a full commerce platform. It shows how ChannelTalk can identify a visitor, attach member data after login, and give a support team useful shopping context.
 
@@ -21,7 +21,8 @@ The goal is to look like a realistic DTC skincare shop while staying intentional
 
 - Ruby 3.3.6
 - Rails 8.1
-- SQLite
+- SQLite for local development and tests
+- PostgreSQL for Railway production
 - Rails native authentication
 - ERB views
 - ChannelTalk Web SDK
@@ -42,7 +43,7 @@ Open `http://localhost:3001`.
 
 The static preview is published from `docs/`:
 
-https://nimowayangjowi.github.io/moroa-lane/
+https://nimowayangjowi.github.io/acme-corp/
 
 To refresh the static preview after changing Rails views, run the Rails server and export again:
 

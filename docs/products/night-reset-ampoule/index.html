@@ -2,33 +2,34 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Moroa Lane</title>
+    <title>Acme Corp</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Moroa Lane">
+    <meta name="application-name" content="Acme Corp">
     <meta name="mobile-web-app-capable" content="yes">
         
 
     
 
 
-    <link rel="icon" href="/moroa-lane/icon.png" type="image/png">
-    <link rel="icon" href="/moroa-lane/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/moroa-lane/icon.png">
+    <link rel="icon" href="/acme-corp/icon.png" type="image/png">
+    <link rel="icon" href="/acme-corp/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/acme-corp/icon.png">
 
-    <link rel="stylesheet" href="/moroa-lane/assets/application.css" data-turbo-track="reload" />
+    <link rel="stylesheet" href="/acme-corp/assets/application.css" data-turbo-track="reload" />
     
 
   </head>
 
   <body>
     <header class="site-header">
-      <a class="brand-link" href="/moroa-lane/">Moroa Lane</a>
+      <a class="brand-link" href="/acme-corp/">Acme Corp</a>
       <nav class="site-nav" aria-label="Primary">
-        <a href="/moroa-lane/products/">Shop</a>
-        <a href="/moroa-lane/#scope">About</a>
-          <a href="/moroa-lane/session/new/">Log in</a>
-          <a href="/moroa-lane/registration/new/">Join</a>
+        <a href="/acme-corp/products/">Shop</a>
+        <a href="/acme-corp/channel-talk-guide/">Guide</a>
+        <a href="/acme-corp/#scope">About</a>
+          <a href="/acme-corp/session/new/">Log in</a>
+          <a href="/acme-corp/registration/new/">Join</a>
       </nav>
     </header>
 
@@ -46,7 +47,7 @@
     <p class="product-description">A concentrated night treatment for customers thinking through usage frequency, texture, and sensitivity.</p>
 
     <div class="product-actions">
-        <a class="button" href="/moroa-lane/session/new/">Log in to add to cart</a>
+        <a class="button" href="/acme-corp/session/new/">Log in to add to cart</a>
         <span>Sign in to save this product to your cart.</span>
     </div>
 
@@ -63,6 +64,41 @@
 
     </main>
 
-      <a class="channel-fallback-button" href="/moroa-lane/care/">Chat with us</a>
+      <script>
+        (function(){var w=window;if(w.ChannelIO){return w.console.error("ChannelIO script included twice.");}var ch=function(){ch.c(arguments);};ch.q=[];ch.c=function(args){ch.q.push(args);};w.ChannelIO=ch;function l(){if(w.ChannelIOInitialized){return;}w.ChannelIOInitialized=true;var s=document.createElement("script");s.type="text/javascript";s.async=true;s.src="https://cdn.channel.io/plugin/ch-plugin-web.js";var x=document.getElementsByTagName("script")[0];if(x.parentNode){x.parentNode.insertBefore(s,x);}}if(document.readyState==="complete"){l();}else{w.addEventListener("DOMContentLoaded",l);w.addEventListener("load",l);}})();
+        var channelBootOptions = {"pluginKey":"09dd96fd-3ff2-4476-a37f-916102b26183","language":"en"};
+
+        function clearChannelTalkBrowserState() {
+          try {
+            Object.keys(window.localStorage || {}).forEach(function(key) {
+              if (key.indexOf("Channel.") === 0) { window.localStorage.removeItem(key); }
+            });
+            Object.keys(window.sessionStorage || {}).forEach(function(key) {
+              if (key.indexOf("Channel.") === 0) { window.sessionStorage.removeItem(key); }
+            });
+            document.cookie = "_channeltalk_session=; Max-Age=0; path=/; SameSite=Lax";
+          } catch (error) {
+            console.warn("ChannelTalk browser state cleanup failed", error);
+          }
+        }
+
+        function bootChannelTalk() {
+          ChannelIO("boot", channelBootOptions, function(error) {
+            if (error) { console.error("ChannelTalk boot failed", error); }
+          });
+        }
+
+        bootChannelTalk();
+
+        document.addEventListener("submit", function(event) {
+          var form = event.target;
+          if (!form.matches("[data-channel-logout-form]")) { return; }
+
+          if (window.ChannelIO) {
+            clearChannelTalkBrowserState();
+            ChannelIO("shutdown");
+          }
+        }, true);
+      </script>
   </body>
 </html>
