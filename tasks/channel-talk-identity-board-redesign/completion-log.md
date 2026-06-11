@@ -5,7 +5,7 @@
 ## Phase 0: Planning Documents
 
 완료일: 2026-06-11
-커밋: (phase 0 commit)
+커밋: 9ee55ea
 
 ### 완료한 것
 
@@ -32,3 +32,36 @@
 ### 다음 phase 계획 변경
 
 - 변경 없음
+
+## Phase 1: Snapshot Data & State Semantics
+
+완료일: 2026-06-11
+커밋: (phase 1 commit)
+
+### 완료한 것
+
+- `ChannelIdentityDemoSnapshot`의 `flow` 각 단계에 `keyRole`을 추가했다(`acme_user`/`member_id`/`user_api` = input, `mapping`/`s2s_event`/`delivery` = output). Phase 2 레일의 input/output 색 보더 기준이 된다.
+- `identity`에 `credentialsConfigured`(boolean)와 `deliveryState`(표현용 분류)를 추가했다.
+- `deliveryState` 규칙: delivery 없음 → `none`, credentials 미설정 + 실패/대기 → `not_configured`, 그 외 실제 status 그대로(`pending`/`processing`/`sent`/`failed`).
+- 원본 `deliveryStatus`와 `last_error`는 그대로 유지해 실제 실패를 숨기지 않는다.
+- 화면(ERB/CSS)은 변경하지 않았다(데이터/의미 계층만).
+
+### 검증한 것
+
+- `bin/rails test test/models/channel_identity_demo_snapshot_test.rb` (5 runs, 22 assertions)
+- `bin/rails test` (65 runs, 380 assertions, 0 failures)
+- 라이브 status endpoint(인증 세션, 3001)에서 확인: `deliveryStatus=failed`(honest)인데 `deliveryState=not_configured`, `credentialsConfigured=false`, 6단계 `keyRole`이 input/output로 기대대로 출력됨.
+- 신규 테스트: keyRole 매핑, credentials 미설정 시 not_configured + 원본 failed 유지, credentials 설정 시 failed 유지, delivery 없음 시 none.
+
+### 회귀 위험
+
+- `credentials_configured?`는 `CHANNELTALK_ACCESS_KEY`/`SECRET` 둘 다 present일 때만 true다. 한쪽만 설정된 부분 구성은 not-configured로 분류된다(현 의도와 일치).
+- 테스트의 `with_env`가 전역 ENV를 변경하지만, Rails parallelize는 프로세스 분리라 워커 간 간섭 없음.
+
+### 개선사항
+
+- Phase 2에서 bridge/rail이 `keyRole`과 `mappingStatus`/`channelUserId`를 그대로 소비하면 되므로 추가 snapshot 필드는 불필요할 전망.
+
+### 다음 phase 계획 변경
+
+- 변경 없음. 확정된 snapshot key: `flow[].keyRole`, `identity.credentialsConfigured`, `identity.deliveryState`. Phase 2~3은 이 key를 그대로 참조한다.

@@ -30,7 +30,9 @@ class ChannelIdentityDemoSnapshot
       memberId: user.member_id,
       channelUserId: mapping&.channel_user_id,
       mappingStatus: mapping_status,
-      deliveryStatus: latest_delivery&.status || "none"
+      deliveryStatus: latest_delivery&.status || "none",
+      credentialsConfigured: credentials_configured?,
+      deliveryState: delivery_state
     }
   end
 
@@ -44,12 +46,12 @@ class ChannelIdentityDemoSnapshot
 
   def flow
     [
-      { key: "acme_user", label: "Acme user", value: "users.id #{user.id}" },
-      { key: "member_id", label: "memberId", value: user.member_id },
-      { key: "user_api", label: "User API", value: "GET /users/@{memberId}" },
-      { key: "mapping", label: "Mapping DB", value: mapping&.channel_user_id || "not synced" },
-      { key: "s2s_event", label: "S2S Purchase", value: latest_event ? "event #{latest_event.id}" : "no purchase" },
-      { key: "delivery", label: "Delivery", value: latest_delivery&.status || "none" }
+      { key: "acme_user", label: "Acme user", value: "users.id #{user.id}", keyRole: "input" },
+      { key: "member_id", label: "memberId", value: user.member_id, keyRole: "input" },
+      { key: "user_api", label: "User API", value: "GET /users/@{memberId}", keyRole: "input" },
+      { key: "mapping", label: "Mapping DB", value: mapping&.channel_user_id || "not synced", keyRole: "output" },
+      { key: "s2s_event", label: "S2S Purchase", value: latest_event ? "event #{latest_event.id}" : "no purchase", keyRole: "output" },
+      { key: "delivery", label: "Delivery", value: latest_delivery&.status || "none", keyRole: "output" }
     ]
   end
 
@@ -121,6 +123,25 @@ class ChannelIdentityDemoSnapshot
     return "synced" if mapping.channel_user_id.present?
 
     "waiting_for_user_api"
+  end
+
+  def credentials_configured?
+    ENV["CHANNELTALK_ACCESS_KEY"].present? && ENV["CHANNELTALK_ACCESS_SECRET"].present?
+  end
+
+  # Presentation-only classification for the board. The real DB status stays in
+  # `deliveryStatus`/`last_error` and is never hidden. `not_configured` only
+  # reframes a blocked-by-missing-credentials state so the demo does not look
+  # broken on load; a real failure with credentials present stays `failed`.
+  def delivery_state
+    status = latest_delivery&.status
+    return "none" if status.nil?
+
+    if !credentials_configured? && %w[failed pending].include?(status)
+      "not_configured"
+    else
+      status
+    end
   end
 
   def mapping
