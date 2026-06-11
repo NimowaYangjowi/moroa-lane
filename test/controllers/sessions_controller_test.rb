@@ -44,6 +44,13 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     ENV["CHANNELTALK_PLUGIN_KEY"] = previous_plugin_key
   end
 
+  test "login does not reuse ChannelTalk browser session cookie name" do
+    post session_path, params: { email_address: @user.email_address, password: "password" }
+
+    assert_no_match(/_channeltalk_session=/, response.headers["Set-Cookie"].to_s)
+    assert_match(/_acme_corp_session=/, response.headers["Set-Cookie"].to_s)
+  end
+
   test "create with invalid credentials" do
     assert_no_difference("Event.count") do
       post session_path, params: { email_address: @user.email_address, password: "wrong" }
