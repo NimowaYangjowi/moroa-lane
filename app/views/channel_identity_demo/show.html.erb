@@ -18,6 +18,12 @@
     data-purchase-url="<%= channel_identity_demo_purchase_path %>"
     data-delivery-url="<%= channel_identity_demo_delivery_path %>"
   >
+    <div class="board-status">
+      <span class="board-status-label">S2S delivery</span>
+      <span class="state-chip" data-field="deliveryState">none</span>
+      <span class="board-status-note" data-field="credentialNote"></span>
+    </div>
+
     <section class="identity-bridge" aria-label="Identity transformation">
       <article class="bridge-side bridge-input">
         <span class="bridge-role">input · Acme가 만든 키</span>
@@ -61,27 +67,13 @@
     </section>
 
     <section class="identity-inspector">
+      <div class="payload-panel">
         <div class="identity-section-heading">
-          <p class="eyebrow">API requests</p>
-          <span class="state-chip" data-field="mappingStatus">not_created</span>
+          <p class="eyebrow">S2S Purchase body</p>
+          <span class="payload-badge">server-generated · not browser SDK</span>
         </div>
-        <div class="request-grid">
-          <article>
-            <span>User API</span>
-            <code data-request="userLookup">-</code>
-          </article>
-          <article>
-            <span>S2S Event API</span>
-            <code data-request="eventCreate">-</code>
-          </article>
-        </div>
-        <div class="payload-panel">
-          <div class="identity-section-heading">
-            <p class="eyebrow">S2S payload</p>
-            <span data-field="serverCredentials">credentials</span>
-          </div>
-          <pre><code data-json="payload">null</code></pre>
-        </div>
+        <pre><code data-json="payload">null</code></pre>
+      </div>
     </section>
 
     <section class="record-board" aria-label="Database records">
@@ -125,10 +117,14 @@
       return request.method + " " + request.path;
     }
 
-    function renderFlow(flow) {
+    function renderFlow(data) {
+      var flow = data.flow || [];
+      var requests = data.requests || {};
+      var identity = data.identity || {};
+      var deliveryRecord = data.records && data.records.channel_event_deliveries;
       var list = board.querySelector("[data-flow-list]");
       list.innerHTML = "";
-      (flow || []).forEach(function(step, index) {
+      flow.forEach(function(step, index) {
         if (index > 0) {
           var arrow = document.createElement("div");
           arrow.className = "rail-arrow";
@@ -142,7 +138,29 @@
         item.innerHTML = "<span class='stage-index'></span><strong class='stage-label'></strong><small class='stage-value'></small>";
         item.querySelector(".stage-index").textContent = String(index + 1).padStart(2, "0");
         item.querySelector(".stage-label").textContent = step.label;
-        item.querySelector(".stage-value").textContent = step.value || "-";
+
+        var valueEl = item.querySelector(".stage-value");
+        if (step.key === "user_api" && requests.userLookup) {
+          valueEl.textContent = requestLine(requests.userLookup);
+          valueEl.classList.add("stage-path");
+        } else if (step.key === "s2s_event" && requests.eventCreate) {
+          valueEl.textContent = requestLine(requests.eventCreate);
+          valueEl.classList.add("stage-path");
+        } else if (step.key === "delivery") {
+          valueEl.remove();
+          var chip = document.createElement("span");
+          chip.className = "state-chip";
+          setStateChip(chip, identity.deliveryState);
+          item.appendChild(chip);
+          if (identity.deliveryState === "failed" && deliveryRecord && deliveryRecord.last_error) {
+            var cause = document.createElement("small");
+            cause.className = "stage-error";
+            cause.textContent = deliveryRecord.last_error;
+            item.appendChild(cause);
+          }
+        } else {
+          valueEl.textContent = step.value || "-";
+        }
         list.appendChild(item);
       });
     }
@@ -188,21 +206,20 @@
     }
 
     function render(data) {
-      setText("[data-field='memberId']", data.identity && data.identity.memberId);
-      setText("[data-field='channelUserId']", data.identity && data.identity.channelUserId || "not synced");
-      setStateChipAll("[data-field='mappingStatus']", data.identity && data.identity.mappingStatus);
+      var identity = data.identity || {};
+      setText("[data-field='memberId']", identity.memberId);
+      setText("[data-field='channelUserId']", identity.channelUserId || "not synced");
+      setStateChipAll("[data-field='mappingStatus']", identity.mappingStatus);
+      setStateChipAll("[data-field='deliveryState']", identity.deliveryState);
+      setText("[data-field='credentialNote']", identity.credentialsConfigured ? "credentials configured" : "demo · credentials not set");
       setText("[data-field='generatedAt']", data.generatedAt);
 
-      var credentials = data.requests && data.requests.serverCredentials;
-      setText("[data-field='serverCredentials']", credentials ? "key " + credentials.accessKey + " / secret " + credentials.accessSecret : "credentials");
-      setText("[data-request='userLookup']", requestLine(data.requests && data.requests.userLookup));
-      setText("[data-request='eventCreate']", requestLine(data.requests && data.requests.eventCreate));
       setText("[data-metric='purchaseEvents']", data.metrics && data.metrics.purchaseEvents);
       setText("[data-metric='orders']", data.metrics && data.metrics.orders);
       setText("[data-metric='deliveries']", data.metrics && data.metrics.deliveries);
 
       board.querySelector("[data-json='payload']").textContent = data.payload ? JSON.stringify(data.payload, null, 2) : "null";
-      renderFlow(data.flow);
+      renderFlow(data);
       renderRecords(data.records);
     }
 

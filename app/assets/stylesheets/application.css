@@ -1154,25 +1154,35 @@ a {
   overflow-wrap: anywhere;
 }
 
-.request-grid {
-  display: grid;
-  gap: 10px;
-  grid-template-columns: 1fr;
-  margin-bottom: 14px;
-}
-
-.request-grid article {
+/* Headline delivery state so the board does not read as broken on load. */
+.board-status {
+  align-items: center;
+  background: #fff;
   border: 1px solid #e6ddd2;
-  display: grid;
-  gap: 10px;
-  padding: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 16px;
 }
 
-.request-grid code {
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-  font-size: 13px;
-  line-height: 1.5;
-  overflow-wrap: anywhere;
+.board-status-label {
+  color: #2f6f68;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.board-status-note {
+  color: #7a7066;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.payload-badge {
+  color: #f3d8b7;
+  font-size: 11px;
+  font-weight: 800;
+  text-align: right;
 }
 
 .payload-panel {
@@ -1231,6 +1241,25 @@ a {
 .state-chip[data-state="waiting_for_user_api"] {
   background: #eadfb8;
   color: #725916;
+}
+
+/* Missing credentials is a neutral demo state, distinct from a real red failure. */
+.state-chip[data-state="not_configured"] {
+  background: #e7e2db;
+  color: #6b6258;
+}
+
+/* Each stage carries its own artifact: API path or delivery result. */
+.rail-stage .stage-path {
+  font-weight: 700;
+}
+
+.rail-stage .stage-error {
+  color: #8e2e20;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 11px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
 }
 
 .record-grid {

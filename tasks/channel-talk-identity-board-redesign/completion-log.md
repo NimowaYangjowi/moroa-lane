@@ -69,7 +69,7 @@
 ## Phase 2: Identity Bridge & Connected Rail
 
 완료일: 2026-06-11
-커밋: (phase 2 commit)
+커밋: ed502ac
 
 ### 완료한 것
 
@@ -101,3 +101,38 @@
 ### 다음 phase 계획 변경
 
 - 변경 없음. input/output primitive 색 확정값(teal `#9fc4bd`/`#eef5f3`/`#2f6f68`, amber `#e0c089`/`#faf3e3`/`#9a6b16`)을 00-project-brief.md 시각 토큰 표 기준으로 사용한다.
+
+## Phase 3: Stage-Artifact Linking & State Framing
+
+완료일: 2026-06-11
+커밋: (phase 3 commit)
+
+### 완료한 것
+
+- 각 레일 단계를 자기 아티팩트와 묶었다: User API 단계는 실제 `GET /open/v5/users/@{memberId}` 경로(input 색), S2S Purchase 단계는 `POST /open/v5/users/{userId}/events` 경로(output 색), Delivery 단계는 `deliveryState` 상태 칩 + 실제 실패 시 `last_error`를 표시한다.
+- 떠 있던 "API requests" 박스(request-grid)를 제거하고, 경로를 단계 안으로 이동해 "이 단계 = 이 호출"이 위치로 드러나게 했다.
+- inspector를 payload 단독 패널로 정리하고 헤더에 `server-generated · not browser SDK` 배지를 명시했다(브라우저 SDK가 아니라 서버 생성 구매 이벤트임을 표시).
+- 상단에 headline delivery 상태 strip을 추가했다: `S2S delivery [deliveryState chip] · credentialNote`. 로그인 직후 기본 화면이 중립 `NOT_CONFIGURED · demo · credentials not set`로 보이고, 빨강 FAILED 첫인상이 사라졌다.
+- `not_configured` 칩을 중립 회색으로, 실제 `failed`는 빨강으로 유지해 둘을 분리했다. **실제 실패는 숨기지 않는다.**
+- inline JS: `renderFlow(data)`로 시그니처를 바꿔 requests/identity/records를 소비, `render`에서 deliveryState 칩과 credentialNote를 갱신, 제거된 request/serverCredentials 갱신 코드 정리.
+
+### 검증한 것
+
+- `bin/rails test` (65 runs, 380 assertions, 0 failures).
+- 라이브 status endpoint `200`, 폴링 중 board 관련 신규 콘솔 에러 없음(기존 ChannelTalk SDK boot 401만, 리디자인 무관).
+- `browse` desktop(1440): status strip 중립 NOT_CONFIGURED, 단계별 API 경로 노출, payload 배지 확인. `/tmp/p3-desktop-fold.png`, `/tmp/p3-desktop-full.png`.
+- `browse` mobile(390): 동일 구조 세로 접힘 확인. `/tmp/p3-mobile-full.png`.
+- 칩 색 분리 확인(computed style): `not_configured = rgb(231,226,219)` 중립, `failed = rgb(245,216,208)` 빨강. honest-failure 경로가 빨강으로 렌더됨을 확인.
+
+### 회귀 위험
+
+- 실제 채널톡 credential이 없어 `failed`(credentials 있는 실제 실패) 상태의 라이브 스크린샷은 못 찍었다. 분류 로직은 Phase 1 모델 테스트로, 빨강 렌더는 computed style 비교로 확인했다.
+- `.request-grid span` 셀렉터가 공용 라벨 규칙에 남아 있으나 매칭되는 마크업이 없어 무해하다.
+
+### 개선사항
+
+- Phase 4에서 변화 펄스, 단계형 버튼 라벨, DB record 위계화, identity-counters 보조 띠 마무리를 진행한다.
+
+### 다음 phase 계획 변경
+
+- 변경 없음.
