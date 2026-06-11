@@ -140,7 +140,7 @@
 ## Phase 4: Change Highlight, Stepped Actions & DB Hierarchy
 
 완료일: 2026-06-11
-커밋: (phase 4 commit)
+커밋: 8526896
 
 ### 완료한 것
 
@@ -168,3 +168,30 @@
 ### 다음 phase 계획 변경
 
 - 변경 없음.
+
+## Phase 5: Verification & Docs
+
+완료일: 2026-06-11
+커밋: d673a97
+
+### 완료한 것
+
+- 새 서버(3002, app/services autoload 정상)에서 desktop(1440)/mobile(390) 최종 확인: bridge 변환 카드, 연결형 레일, 단계↔API/payload/delivery 연결, not-configured 상태 프레이밍, 변화 펄스, DB core-first 위계가 모두 의도대로 보인다.
+- README 갱신: Demo Flow 11-13단계를 bridge 읽기 + `① Create purchase`/`② Send to ChannelTalk` + 값 하이라이트로 고쳤고, Interview Talking Points의 보드 설명을 bridge → color-coded rail → server-generated payload 배지 → DB 위계 → not_configured/failed 구분 구조로 다시 썼다.
+- 선행 프로젝트 `channel-talk-identity-demo-board/completion-log.md`에 후속 리디자인 포인터를 추가했다.
+
+### 검증한 것
+
+- `bin/rails test` (65 runs, 384 assertions, 0 failures).
+- polling 간격 `window.setInterval(loadStatus, 2000)` 유지, snapshot count query는 기존 3개(`purchaseEvents`/`orders`/`deliveries`)뿐 — 비용 회귀 없음.
+- 최종 콘솔: 보드 관련 에러 없음(기존 ChannelTalk SDK 401/404만, 플러그인 키 미설정으로 리디자인 무관).
+- 스크린샷: `/tmp/p5-final-desktop.png`, `/tmp/p5-final-mobile.png`. before 비교용: `/tmp/id-1440-full.png`.
+
+### 회귀 위험
+
+- 3001 stale 서버는 여전히 `PurchaseOrder` autoload 불가(Phase 4 기록 참조). 발표/실사용 전 Rails 서버 재시작 필요. 검증용 3002 서버는 정상.
+- 실제 ChannelTalk credential이 없어 `sent`(성공 전송)와 credential 있는 실제 `failed`(빨강)의 라이브 캡처는 못 했다. 분류 로직은 모델 테스트로, 색 분기는 computed style로 확인했다.
+
+### 다음 phase 계획 변경
+
+- 남은 phase 없음. 리디자인 5개 phase 완료.

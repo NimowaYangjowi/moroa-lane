@@ -132,8 +132,8 @@ If these Open API keys are not set, the storefront order still completes. The Ch
 9. Open `My page` and show member fields, recent views, cart summary, and order history.
 10. Open `Channel Debug` again. The payload now includes `memberId`, profile fields, cart context, and order context.
 11. Open `Identity Flow` at `/debug/channel/identity-flow`.
-12. Click `Create demo purchase`, then `Run delivery now`.
-13. Show the flowchart, User API request, S2S payload, DB records, and delivery state updating on the page.
+12. Read the bridge card at the top: `memberId` (input, Acme-owned key) transforms through the User API lookup into `userId` (output, ChannelTalk-issued key).
+13. Click `① Create purchase`, then `② Send to ChannelTalk`, and watch the counters, flow rail, S2S payload, and DB rows highlight as values change.
 
 ## Interview Talking Points
 
@@ -149,7 +149,7 @@ Anonymous, Lead, and Member can be explained from the UI:
 
 The `/debug/channel` page is the developer troubleshooting view. It answers the first integration questions: Which plugin key is being used? Is `memberId` present? Which profile fields are being sent? Is member hash enabled?
 
-The `/debug/channel/identity-flow` board is the interview walkthrough view. It shows Acme's `memberId`, ChannelTalk's `userId`, the `GET /open/v5/users/@{memberId}` lookup, the `POST /open/v5/users/{userId}/events` request, the actual S2S payload, and the latest DB rows used for the mapping.
+The `/debug/channel/identity-flow` board is the interview walkthrough view, laid out so the value flows left to right without narration. A bridge card leads with the `memberId` → `userId` transformation, color-coded by role: input (memberId) stages are teal, output (userId) stages amber. A connected rail carries the six steps (Acme user → memberId → User API `GET /open/v5/users/@{memberId}` → Mapping DB → S2S Purchase `POST /open/v5/users/{userId}/events` → Delivery), each stage holding its own API path or delivery state. The S2S payload is badged as server-generated, and the DB records lead with the story-critical mapping, events, and delivery rows. When ChannelTalk Open API keys are absent, the delivery state reads as a neutral `not_configured` rather than a failure; a real send failure still shows red with its `last_error`.
 
 Server-side purchase delivery uses a different path from the Web SDK. The app stores the Acme customer key as `memberId`, resolves the ChannelTalk internal `userId`, then sends the `Purchase` event from a background job. This mirrors how a customer backend would send trusted business events such as paid orders without relying on browser-side tracking.
 

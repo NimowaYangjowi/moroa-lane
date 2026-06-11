@@ -182,3 +182,7 @@
 ### 다음 phase 계획 변경
 
 - 남은 phase 없음
+
+## 후속 작업 포인터
+
+이 보드의 UI 리디자인(identity bridge, 연결형 레일, 단계↔아티팩트 연결, not-configured 상태 프레이밍, 변화 펄스, DB 위계화)은 [tasks/channel-talk-identity-board-redesign](../channel-talk-identity-board-redesign)에서 진행했다.
