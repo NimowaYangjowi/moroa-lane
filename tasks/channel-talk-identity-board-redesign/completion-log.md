@@ -36,7 +36,7 @@
 ## Phase 1: Snapshot Data & State Semantics
 
 완료일: 2026-06-11
-커밋: (phase 1 commit)
+커밋: 0bcc7ab
 
 ### 완료한 것
 
@@ -65,3 +65,39 @@
 ### 다음 phase 계획 변경
 
 - 변경 없음. 확정된 snapshot key: `flow[].keyRole`, `identity.credentialsConfigured`, `identity.deliveryState`. Phase 2~3은 이 key를 그대로 참조한다.
+
+## Phase 2: Identity Bridge & Connected Rail
+
+완료일: 2026-06-11
+커밋: (phase 2 commit)
+
+### 완료한 것
+
+- 상단 `identity-summary`(4칸)를 `memberId → userId` 변환 카드(identity bridge)로 교체했다. 좌측 memberId(input), 화살표 위 `User API lookup` + `GET /open/v5/users/@{memberId}`, 우측 userId(output) + `mappingStatus` 칩 구조.
+- input/output 의미 색을 `.identity-demo-board`의 CSS custom property(`--identity-input-*`, `--identity-output-*`)로 정의해 bridge와 rail이 같은 색 언어를 공유하게 했다. input=teal 계열, output=amber 계열.
+- 6단계 flowchart를 3열×2행 그리드에서 화살표(`→`)로 연결된 가로 레일로 교체했다. `flow[].keyRole`에 따라 input 단계(01-03)는 teal, output 단계(04-06)는 amber 보더/배경.
+- 레일을 2열 grid에서 빼내 full-width 밴드로 올려, 6단계가 좌→우 한 줄로 읽히게 했다(`identity-board-grid` 래퍼 제거, flow-board/inspector를 board 직속 full-width 섹션으로).
+- 모바일에서 bridge는 1열, 레일은 세로열로 접히고 화살표가 `↓`로 바뀌도록 media query를 추가했다.
+- inline JS: `renderFlow`를 화살표 구분자 + keyRole data 속성 마크업으로 수정, `mappingStatus`가 bridge·inspector 두 곳에 있으므로 `setStateChipAll`로 모두 갱신, 제거된 `acmeUserId`/`deliveryStatus` summary 필드 갱신 코드 정리.
+
+### 검증한 것
+
+- `bin/rails test` (65 runs, 380 assertions, 0 failures) — 뷰 렌더 회귀 없음.
+- 라이브 status endpoint `200`.
+- `browse` desktop(1440): bridge의 input(teal)/output(amber) 색 대비, 화살표 위 GET 경로, 레일의 좌→우 화살표 연결과 키 전환 색(03 input→04 output) 확인. 스크린샷 `/tmp/p2-desktop-fold.png`, `/tmp/p2-desktop-full.png`.
+- `browse` mobile(390): bridge 1열 + `↓`, 레일 세로 + `↓`, JSON/DB overflow 없음 확인. 스크린샷 `/tmp/p2-mobile-full.png`.
+
+### 회귀 위험
+
+- 레일은 `overflow-x: auto`로 매우 좁은 데스크톱 폭에서 가로 스크롤될 수 있다. 1440에서는 한 줄에 모두 들어옴.
+- Delivery 레일 단계는 아직 `flow.value`(예: `failed`)를 평문으로 보여준다. not-configured 중립 칩 프레이밍은 Phase 3에서 적용한다.
+- 폴링 중 발견한 SDK boot 401/favicon 404는 리디자인과 무관한 기존 동작(플러그인 키 미설정). 편집 중 잠깐 보인 status 500은 reload 타이밍 이슈로, 최종 상태는 200.
+
+### 개선사항
+
+- Phase 3에서 inspector(API requests + payload)를 레일 단계와 시각적으로 연결하고, payload 패널 헤더의 `KEY MISSING / SECRET MISSING` 빨강을 중립 문구로 바꾼다.
+- Phase 4에서 identity-counters를 bridge와 더 분명히 구분되는 보조 통계 띠로 마무리한다.
+
+### 다음 phase 계획 변경
+
+- 변경 없음. input/output primitive 색 확정값(teal `#9fc4bd`/`#eef5f3`/`#2f6f68`, amber `#e0c089`/`#faf3e3`/`#9a6b16`)을 00-project-brief.md 시각 토큰 표 기준으로 사용한다.

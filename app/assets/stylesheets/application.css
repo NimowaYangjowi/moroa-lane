@@ -924,27 +924,104 @@ a {
 }
 
 .identity-demo-board {
+  /* Semantic identifier-role tokens shared by the bridge card and the rail.
+     input = memberId (Acme-owned key), output = userId (ChannelTalk-issued key). */
+  --identity-input-border: #9fc4bd;
+  --identity-input-surface: #eef5f3;
+  --identity-input-accent: #2f6f68;
+  --identity-output-border: #e0c089;
+  --identity-output-surface: #faf3e3;
+  --identity-output-accent: #9a6b16;
   display: grid;
   gap: 18px;
 }
 
-.identity-summary {
+/* Identity bridge: shows the memberId -> userId transformation as the lead element. */
+.identity-bridge {
+  align-items: stretch;
   display: grid;
-  gap: 1px;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
 }
 
-.identity-summary article,
-.identity-counters article {
+.bridge-side {
+  align-content: start;
   background: #fff;
   border: 1px solid #e6ddd2;
   display: grid;
   gap: 10px;
-  min-height: 132px;
-  padding: 18px;
+  padding: 20px 22px;
 }
 
-.identity-summary span,
+.bridge-side .eyebrow {
+  margin: 0;
+}
+
+.bridge-side strong {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 18px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+  word-break: break-all;
+}
+
+.bridge-role {
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.bridge-input {
+  background: var(--identity-input-surface);
+  border-left: 4px solid var(--identity-input-border);
+}
+
+.bridge-input .bridge-role,
+.bridge-input .eyebrow {
+  color: var(--identity-input-accent);
+}
+
+.bridge-output {
+  background: var(--identity-output-surface);
+  border-left: 4px solid var(--identity-output-border);
+}
+
+.bridge-output .bridge-role,
+.bridge-output .eyebrow {
+  color: var(--identity-output-accent);
+}
+
+.bridge-arrow {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  justify-content: center;
+  padding: 0 20px;
+  text-align: center;
+}
+
+.bridge-op {
+  color: #2f6f68;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.bridge-op-path {
+  color: #7a7066;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.bridge-arrow-line::after {
+  color: #b3a594;
+  content: "\2192";
+  font-size: 30px;
+  line-height: 1;
+}
+
 .identity-counters span,
 .request-grid span,
 .identity-stage span,
@@ -955,12 +1032,6 @@ a {
   text-transform: uppercase;
 }
 
-.identity-summary strong {
-  font-size: 18px;
-  line-height: 1.25;
-  overflow-wrap: anywhere;
-}
-
 .identity-counters {
   display: grid;
   gap: 10px;
@@ -968,20 +1039,18 @@ a {
 }
 
 .identity-counters article {
+  background: #fff;
+  border: 1px solid #e6ddd2;
+  display: grid;
+  gap: 10px;
   min-height: 96px;
+  padding: 18px;
 }
 
 .identity-counters strong {
   color: #1d1b18;
   font-size: 34px;
   line-height: 1;
-}
-
-.identity-board-grid {
-  align-items: stretch;
-  display: grid;
-  gap: 18px;
-  grid-template-columns: minmax(0, 1.06fr) minmax(360px, 0.94fr);
 }
 
 .identity-flow-board,
@@ -1011,10 +1080,26 @@ a {
   font-weight: 800;
 }
 
+/* Connected left-to-right rail: each stage flows into the next through an arrow. */
 .identity-stage-list {
-  display: grid;
-  gap: 10px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+}
+
+.rail-arrow {
+  align-items: center;
+  display: flex;
+  flex: 0 0 34px;
+  justify-content: center;
+}
+
+.rail-arrow::after {
+  color: #b3a594;
+  content: "\2192";
+  font-size: 22px;
+  line-height: 1;
 }
 
 .identity-stage {
@@ -1026,9 +1111,39 @@ a {
   position: relative;
 }
 
+.rail-stage {
+  flex: 1 1 0;
+  min-width: 150px;
+}
+
+/* Key-role color encoding marks where the identifier changes from memberId to userId. */
+.rail-stage[data-key-role="input"] {
+  background: var(--identity-input-surface);
+  border-color: var(--identity-input-border);
+}
+
+.rail-stage[data-key-role="output"] {
+  background: var(--identity-output-surface);
+  border-color: var(--identity-output-border);
+}
+
+.rail-stage .stage-index {
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.rail-stage[data-key-role="input"] .stage-index {
+  color: var(--identity-input-accent);
+}
+
+.rail-stage[data-key-role="output"] .stage-index {
+  color: var(--identity-output-accent);
+}
+
 .identity-stage strong {
-  font-size: 20px;
+  font-size: 18px;
   line-height: 1.15;
+  overflow-wrap: anywhere;
 }
 
 .identity-stage small {
@@ -1227,13 +1342,37 @@ a {
   .guide-shot-block,
   .guide-shot-block.alternate,
   .guide-data-map,
-  .identity-summary,
   .identity-counters,
-  .identity-board-grid,
-  .identity-stage-list,
   .record-grid,
   .cart-row {
     grid-template-columns: 1fr;
+  }
+
+  /* Identity bridge and rail collapse to a single column with downward arrows. */
+  .identity-bridge {
+    grid-template-columns: 1fr;
+  }
+
+  .bridge-arrow {
+    flex-direction: row;
+    gap: 10px;
+    padding: 14px 0;
+  }
+
+  .bridge-arrow-line::after {
+    content: "\2193";
+  }
+
+  .identity-stage-list {
+    flex-direction: column;
+  }
+
+  .rail-arrow {
+    flex: 0 0 28px;
+  }
+
+  .rail-arrow::after {
+    content: "\2193";
   }
 
   .identity-demo-shell {

@@ -18,22 +18,22 @@
     data-purchase-url="<%= channel_identity_demo_purchase_path %>"
     data-delivery-url="<%= channel_identity_demo_delivery_path %>"
   >
-    <section class="identity-summary" aria-label="Identity summary">
-      <article>
-        <span>Acme user</span>
-        <strong data-field="acmeUserId">-</strong>
-      </article>
-      <article>
-        <span>memberId</span>
+    <section class="identity-bridge" aria-label="Identity transformation">
+      <article class="bridge-side bridge-input">
+        <span class="bridge-role">input · Acme가 만든 키</span>
+        <p class="eyebrow">memberId</p>
         <strong data-field="memberId">-</strong>
       </article>
-      <article>
-        <span>Channel userId</span>
+      <div class="bridge-arrow">
+        <span class="bridge-op">User API lookup</span>
+        <code class="bridge-op-path">GET /open/v5/users/@{memberId}</code>
+        <span class="bridge-arrow-line" aria-hidden="true"></span>
+      </div>
+      <article class="bridge-side bridge-output">
+        <span class="bridge-role">output · 채널톡이 발급</span>
+        <p class="eyebrow">userId</p>
         <strong data-field="channelUserId">not synced</strong>
-      </article>
-      <article>
-        <span>Delivery</span>
-        <strong class="state-chip" data-field="deliveryStatus">none</strong>
+        <span class="state-chip" data-field="mappingStatus">not_created</span>
       </article>
     </section>
 
@@ -52,16 +52,15 @@
       </article>
     </section>
 
-    <section class="identity-board-grid">
-      <div class="identity-flow-board">
-        <div class="identity-section-heading">
-          <p class="eyebrow">Flowchart</p>
-          <small data-field="generatedAt">-</small>
-        </div>
-        <div class="identity-stage-list" data-flow-list></div>
+    <section class="identity-flow-board">
+      <div class="identity-section-heading">
+        <p class="eyebrow">Flowchart</p>
+        <small data-field="generatedAt">-</small>
       </div>
+      <div class="identity-stage-list" data-flow-list></div>
+    </section>
 
-      <div class="identity-inspector">
+    <section class="identity-inspector">
         <div class="identity-section-heading">
           <p class="eyebrow">API requests</p>
           <span class="state-chip" data-field="mappingStatus">not_created</span>
@@ -83,7 +82,6 @@
           </div>
           <pre><code data-json="payload">null</code></pre>
         </div>
-      </div>
     </section>
 
     <section class="record-board" aria-label="Database records">
@@ -116,6 +114,12 @@
       element.dataset.state = value || "none";
     }
 
+    function setStateChipAll(selector, value) {
+      Array.prototype.forEach.call(board.querySelectorAll(selector), function(element) {
+        setStateChip(element, value);
+      });
+    }
+
     function requestLine(request) {
       if (!request) { return "-"; }
       return request.method + " " + request.path;
@@ -125,12 +129,20 @@
       var list = board.querySelector("[data-flow-list]");
       list.innerHTML = "";
       (flow || []).forEach(function(step, index) {
+        if (index > 0) {
+          var arrow = document.createElement("div");
+          arrow.className = "rail-arrow";
+          arrow.setAttribute("aria-hidden", "true");
+          list.appendChild(arrow);
+        }
         var item = document.createElement("article");
-        item.className = "identity-stage";
-        item.innerHTML = "<span></span><strong></strong><small></small>";
-        item.querySelector("span").textContent = String(index + 1).padStart(2, "0");
-        item.querySelector("strong").textContent = step.label;
-        item.querySelector("small").textContent = step.value || "-";
+        item.className = "identity-stage rail-stage";
+        item.dataset.keyRole = step.keyRole || "";
+        item.dataset.stageKey = step.key || "";
+        item.innerHTML = "<span class='stage-index'></span><strong class='stage-label'></strong><small class='stage-value'></small>";
+        item.querySelector(".stage-index").textContent = String(index + 1).padStart(2, "0");
+        item.querySelector(".stage-label").textContent = step.label;
+        item.querySelector(".stage-value").textContent = step.value || "-";
         list.appendChild(item);
       });
     }
@@ -176,11 +188,9 @@
     }
 
     function render(data) {
-      setText("[data-field='acmeUserId']", data.identity && data.identity.acmeUserId);
       setText("[data-field='memberId']", data.identity && data.identity.memberId);
       setText("[data-field='channelUserId']", data.identity && data.identity.channelUserId || "not synced");
-      setStateChip(board.querySelector("[data-field='deliveryStatus']"), data.identity && data.identity.deliveryStatus);
-      setStateChip(board.querySelector("[data-field='mappingStatus']"), data.identity && data.identity.mappingStatus);
+      setStateChipAll("[data-field='mappingStatus']", data.identity && data.identity.mappingStatus);
       setText("[data-field='generatedAt']", data.generatedAt);
 
       var credentials = data.requests && data.requests.serverCredentials;
