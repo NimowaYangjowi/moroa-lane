@@ -105,7 +105,7 @@
 ## Phase 3: Stage-Artifact Linking & State Framing
 
 완료일: 2026-06-11
-커밋: (phase 3 commit)
+커밋: 2842fa4
 
 ### 완료한 것
 
@@ -132,6 +132,38 @@
 ### 개선사항
 
 - Phase 4에서 변화 펄스, 단계형 버튼 라벨, DB record 위계화, identity-counters 보조 띠 마무리를 진행한다.
+
+### 다음 phase 계획 변경
+
+- 변경 없음.
+
+## Phase 4: Change Highlight, Stepped Actions & DB Hierarchy
+
+완료일: 2026-06-11
+커밋: (phase 4 commit)
+
+### 완료한 것
+
+- 변화 하이라이트: `render`에서 직전 폴링 값과 비교해 바뀐 카운터(`purchaseEvents`/`orders`/`deliveries`), 상태 칩(`deliveryState`/`mappingStatus`), 변경된 DB 테이블에 0.6초 box-shadow ring 펄스를 적용했다. 첫 렌더는 펄스하지 않고(`hasRendered` 플래그), 순수 client-side 비교라 추가 API 호출이 없다. `prefers-reduced-motion: reduce`에서 펄스를 끈다.
+- 단계형 액션 버튼: `① Create purchase`, `② Send to ChannelTalk`(둘 다 primary), `Refresh`(보조 `refresh-button`)로 발표 순서를 드러냈다. data-demo-action 기반이라 실제 동작은 그대로다.
+- DB record 위계화: 스토리 핵심 3개(`channel_user_mappings`, `events`, `channel_event_deliveries`)를 먼저, `users`/`orders`를 뒤/muted로 정렬했다. core 테이블 제목에 amber 좌측 보더 액센트.
+- 식별자 색 인코딩: `member_id`(input teal), `channel_user_id`(output amber)를 `channel_user_mappings`와 `channel_event_deliveries` 행에서 색으로 강조해, 매핑 row가 아직 없어도(`userId` not synced) deliveries 행에서 두 식별자가 나란히 색으로 보인다.
+- raw ISO 타임스탬프를 `toLocaleTimeString()` 시:분:초로 표시.
+
+### 검증한 것
+
+- `bin/rails test` (65 runs, 384 assertions, 0 failures). 컨트롤러 테스트의 버튼 라벨 단언을 새 라벨로 갱신하고 `.identity-bridge`, `[data-field='deliveryState']` 구조 단언을 추가했다.
+- 라이브 클릭 검증(새 서버 3002): `① Create purchase` 클릭 후 카운터 `pe 4→5, o 5→6, d 4→5` 증가, 동시에 6개 요소 펄스(`.pulse`) 발생 확인. `② Send to ChannelTalk` deliver action `200`.
+- `browse` desktop/mobile: 단계형 버튼, DB core-first 정렬, deliveries 행의 `member_id` teal `rgb(47,111,104)` / `channel_user_id` amber `rgb(154,107,22)` 색 확인. `/tmp/p4-final-desktop.png`, `/tmp/p4-final-mobile.png`, `/tmp/p4-records2.png`.
+
+### 회귀 위험
+
+- **중요(환경)**: 3001 포트의 기존 dev 서버(pid 88888)는 `app/services` 디렉터리 추가 이전에 떠 있던 stale 프로세스라 `PurchaseOrder`를 autoload하지 못해 purchase action이 `500 NameError`를 낸다. 리디자인 코드 문제가 아니라 서버 재시작 필요. 검증은 새로 띄운 3002 서버에서 수행했다. **발표 전 Rails 서버를 재시작해야 purchase/deliver 액션이 동작한다.**
+- 매핑 row가 실제로 생기는 경로(채널톡 User API 동기화)는 credential이 없어 라이브로 못 만들었다. deliveries 행 기준으로 식별자 색은 확인했다.
+
+### 개선사항
+
+- Phase 5에서 desktop/mobile 최종 회귀 확인, polling 비용(여전히 2초, count query 증가 없음) 확인, README의 보드 설명/발표 순서를 새 구조로 갱신한다.
 
 ### 다음 phase 계획 변경
 

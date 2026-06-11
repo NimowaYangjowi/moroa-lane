@@ -10,8 +10,10 @@ class ChannelIdentityDemoControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "h1", "memberId to userId to S2S Purchase"
-    assert_select "button", "Create demo purchase"
-    assert_select "button", "Run delivery now"
+    assert_select "button", "① Create purchase"
+    assert_select "button", "② Send to ChannelTalk"
+    assert_select ".identity-bridge"
+    assert_select "[data-field='deliveryState']"
     assert_select "[data-status-url=?]", channel_identity_demo_status_path
     assert_select "[data-flow-list]"
     assert_select "[data-record-grid]"

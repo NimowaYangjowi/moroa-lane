@@ -5,9 +5,9 @@
       <h1>memberId to userId to S2S Purchase</h1>
     </div>
     <div class="identity-demo-actions">
-      <button class="button" type="button" data-demo-action="purchase">Create demo purchase</button>
-      <button class="button secondary-button" type="button" data-demo-action="deliver">Run delivery now</button>
-      <button class="button secondary-button" type="button" data-demo-action="refresh">Refresh</button>
+      <button class="button" type="button" data-demo-action="purchase">① Create purchase</button>
+      <button class="button" type="button" data-demo-action="deliver">② Send to ChannelTalk</button>
+      <button class="button refresh-button" type="button" data-demo-action="refresh">Refresh</button>
     </div>
   </header>
 
@@ -117,6 +117,38 @@
       return request.method + " " + request.path;
     }
 
+    function formatTime(iso) {
+      if (!iso) { return "-"; }
+      var date = new Date(iso);
+      return isNaN(date.getTime()) ? iso : date.toLocaleTimeString();
+    }
+
+    // Change highlight: pulse a value only when it actually changed between polls,
+    // so a click or background update is visible. Skips the first render.
+    var lastValues = {};
+    var hasRendered = false;
+
+    function pulse(element) {
+      if (!element) { return; }
+      element.classList.remove("pulse");
+      void element.offsetWidth;
+      element.classList.add("pulse");
+    }
+
+    function trackPulse(key, value, selector) {
+      var changed = hasRendered && lastValues.hasOwnProperty(key) && lastValues[key] !== value;
+      lastValues[key] = value;
+      if (!changed) { return; }
+      Array.prototype.forEach.call(board.querySelectorAll(selector), function(element) {
+        pulse(element.closest("article") || element);
+      });
+    }
+
+    var RECORD_ORDER = [ "channel_user_mappings", "events", "channel_event_deliveries", "users", "orders" ];
+    var CORE_RECORDS = { channel_user_mappings: true, events: true, channel_event_deliveries: true };
+    var RECORD_CELL_ROLE = { member_id: "input", channel_user_id: "output" };
+    var CELL_ROLE_TABLES = { channel_user_mappings: true, channel_event_deliveries: true };
+
     function renderFlow(data) {
       var flow = data.flow || [];
       var requests = data.requests || {};
@@ -165,62 +197,86 @@
       });
     }
 
+    function recordTableNames(records) {
+      var present = Object.keys(records || {});
+      var ordered = RECORD_ORDER.filter(function(name) { return present.indexOf(name) !== -1; });
+      var extras = present.filter(function(name) { return RECORD_ORDER.indexOf(name) === -1; });
+      return ordered.concat(extras);
+    }
+
     function renderRecords(records) {
       var grid = board.querySelector("[data-record-grid]");
       grid.innerHTML = "";
-      Object.keys(records || {}).forEach(function(tableName) {
+      recordTableNames(records).forEach(function(tableName) {
+        var record = records[tableName];
         var article = document.createElement("article");
-        article.className = "record-table";
+        article.className = "record-table " + (CORE_RECORDS[tableName] ? "record-core" : "record-secondary");
 
         var title = document.createElement("h2");
         title.textContent = tableName;
         article.appendChild(title);
 
-        var record = records[tableName];
         if (!record) {
           var empty = document.createElement("p");
           empty.className = "muted-copy";
           empty.textContent = "no row";
           article.appendChild(empty);
-          grid.appendChild(article);
-          return;
+        } else {
+          var table = document.createElement("table");
+          var body = document.createElement("tbody");
+          Object.keys(record).forEach(function(key) {
+            var row = document.createElement("tr");
+            var heading = document.createElement("th");
+            var value = document.createElement("td");
+            heading.scope = "row";
+            heading.textContent = key;
+            value.textContent = typeof record[key] === "object" && record[key] !== null ? JSON.stringify(record[key]) : String(record[key] ?? "-");
+            if (CELL_ROLE_TABLES[tableName] && RECORD_CELL_ROLE[key]) {
+              value.classList.add("cell-" + RECORD_CELL_ROLE[key]);
+            }
+            row.appendChild(heading);
+            row.appendChild(value);
+            body.appendChild(row);
+          });
+          table.appendChild(body);
+          article.appendChild(table);
         }
 
-        var table = document.createElement("table");
-        var body = document.createElement("tbody");
-        Object.keys(record).forEach(function(key) {
-          var row = document.createElement("tr");
-          var heading = document.createElement("th");
-          var value = document.createElement("td");
-          heading.scope = "row";
-          heading.textContent = key;
-          value.textContent = typeof record[key] === "object" && record[key] !== null ? JSON.stringify(record[key]) : String(record[key] ?? "-");
-          row.appendChild(heading);
-          row.appendChild(value);
-          body.appendChild(row);
-        });
-        table.appendChild(body);
-        article.appendChild(table);
         grid.appendChild(article);
+
+        var signature = JSON.stringify(record || null);
+        var key = "record:" + tableName;
+        if (hasRendered && lastValues.hasOwnProperty(key) && lastValues[key] !== signature) {
+          pulse(article);
+        }
+        lastValues[key] = signature;
       });
     }
 
     function render(data) {
       var identity = data.identity || {};
+      var metrics = data.metrics || {};
       setText("[data-field='memberId']", identity.memberId);
       setText("[data-field='channelUserId']", identity.channelUserId || "not synced");
       setStateChipAll("[data-field='mappingStatus']", identity.mappingStatus);
       setStateChipAll("[data-field='deliveryState']", identity.deliveryState);
       setText("[data-field='credentialNote']", identity.credentialsConfigured ? "credentials configured" : "demo · credentials not set");
-      setText("[data-field='generatedAt']", data.generatedAt);
+      setText("[data-field='generatedAt']", formatTime(data.generatedAt));
 
-      setText("[data-metric='purchaseEvents']", data.metrics && data.metrics.purchaseEvents);
-      setText("[data-metric='orders']", data.metrics && data.metrics.orders);
-      setText("[data-metric='deliveries']", data.metrics && data.metrics.deliveries);
+      setText("[data-metric='purchaseEvents']", metrics.purchaseEvents);
+      setText("[data-metric='orders']", metrics.orders);
+      setText("[data-metric='deliveries']", metrics.deliveries);
 
       board.querySelector("[data-json='payload']").textContent = data.payload ? JSON.stringify(data.payload, null, 2) : "null";
       renderFlow(data);
       renderRecords(data.records);
+
+      trackPulse("purchaseEvents", metrics.purchaseEvents, "[data-metric='purchaseEvents']");
+      trackPulse("orders", metrics.orders, "[data-metric='orders']");
+      trackPulse("deliveries", metrics.deliveries, "[data-metric='deliveries']");
+      trackPulse("mappingStatus", identity.mappingStatus, "[data-field='mappingStatus']");
+      trackPulse("deliveryState", identity.deliveryState, "[data-field='deliveryState']");
+      hasRendered = true;
     }
 
     function loadStatus() {

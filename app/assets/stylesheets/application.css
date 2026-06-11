@@ -1316,6 +1316,60 @@ a {
   overflow-wrap: anywhere;
 }
 
+/* Story-critical tables (mapping, events, deliveries) lead; users/orders support. */
+.record-core {
+  border-color: #cdbfae;
+}
+
+.record-core h2 {
+  border-left: 3px solid var(--identity-output-border);
+}
+
+.record-secondary {
+  opacity: 0.78;
+}
+
+.record-secondary h2 {
+  color: #7a7066;
+  font-weight: 700;
+}
+
+/* In the mapping row the two identifiers sit side by side, color-coded by role. */
+.record-table td.cell-input {
+  color: var(--identity-input-accent);
+  font-weight: 700;
+}
+
+.record-table td.cell-output {
+  color: var(--identity-output-accent);
+  font-weight: 700;
+}
+
+/* Change highlight ring; respects reduced-motion. */
+@keyframes identity-pulse {
+  from { box-shadow: 0 0 0 3px rgba(47, 111, 104, 0.55); }
+  to { box-shadow: 0 0 0 3px rgba(47, 111, 104, 0); }
+}
+
+.pulse {
+  animation: identity-pulse 0.6s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse {
+    animation: none;
+  }
+}
+
+/* Refresh is a utility action, kept lighter than the two ordered demo steps. */
+.refresh-button {
+  background: transparent;
+  border-color: #cdbfae;
+  color: #51483f;
+  font-weight: 700;
+  min-height: 48px;
+}
+
 @media (max-width: 720px) {
   .site-header {
     align-items: flex-start;
